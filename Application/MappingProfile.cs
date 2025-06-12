@@ -11,7 +11,9 @@ namespace Application.Mappings
         {
             CreateMap<Customer, CustomerDto>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FullName.Split(new[] { ' ' }, 2)[0]))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.FullName.Split(new[] { ' ' }, 2)[1]));
 
             CreateMap<Order, OrderDto>()
                 .ReverseMap();

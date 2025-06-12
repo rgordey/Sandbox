@@ -11,6 +11,10 @@ namespace Application.Validators
                 .NotEqual(Guid.Empty)
                 .WithMessage("Customer Id must be valid.");
 
+            RuleFor(x => x.Customer.FullName)
+                .Must(fullName => fullName.Split(' ').Length == 2)
+                .WithMessage("FullName must contain both first and last names separated by a space.");
+
             RuleFor(x => x.Customer.Email)
                 .NotEmpty()
                 .WithMessage("Email is Required")

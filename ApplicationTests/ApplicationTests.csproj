@@ -22,6 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Application.Validators\Application.Validators.csproj" />
     <ProjectReference Include="..\Application\Application.Mappings.csproj" />
   </ItemGroup>
 

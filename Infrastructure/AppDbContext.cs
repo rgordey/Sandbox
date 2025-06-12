@@ -15,8 +15,7 @@ namespace Infrastructure
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
-            
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;            
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

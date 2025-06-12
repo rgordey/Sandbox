@@ -26,6 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.Mappings.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Transactions\Transactions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

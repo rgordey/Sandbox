@@ -2,8 +2,11 @@
 using Application.Mappings;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Transactions;
 
 namespace Infrastructure.Tests
 {
@@ -12,6 +15,7 @@ namespace Infrastructure.Tests
         private readonly IServiceScope _scope;
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IMediator _mediator;
 
         public DtoQueryTests()
         {
@@ -19,7 +23,7 @@ namespace Infrastructure.Tests
             try
             {
                 var services = new ServiceCollection()
-                    .AddDbContext<AppDbContext>(options =>
+                    .AddDbContext<IAppDbContext, AppDbContext>(options =>
                         options.UseSqlServer("Server=.;Database=EfCoreBenchmark;Trusted_Connection=True;TrustServerCertificate=True;"))
                     .AddAutoMapper(typeof(MappingProfile))
                     .BuildServiceProvider();
@@ -157,6 +161,18 @@ namespace Infrastructure.Tests
             Assert.Equal(3, customer1.Orders.Count);
             Assert.Equal(2, customer1.Orders[0].OrderDetails.Count);
             Assert.Equal("Product1", customer1.Orders[0].OrderDetails[0].ProductName);
+        }
+
+        [Fact]
+        public async Task GetCustomerQueryHandler_InvalidCustomerId_ThrowsValidationException()
+        {
+            Console.WriteLine("Running GetCustomerQueryHandler_InvalidCustomerId_ThrowsValidationException test.");
+            var query = new GetCustomerQuery { CustomerId = Guid.Empty };
+
+            var exception = await Assert.ThrowsAsync<ValidationException>(async () =>
+                await _mediator.Send(query, CancellationToken.None));
+
+            Assert.Contains("CustomerId must be a valid GUID.", exception.Message);
         }
     }
 }

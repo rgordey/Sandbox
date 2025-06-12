@@ -15,6 +15,9 @@ namespace Infrastructure.Configurations
             builder.HasOne(od => od.Order)
                    .WithMany(o => o.OrderDetails)
                    .HasForeignKey(od => od.OrderId);
+
+            builder.HasIndex(od => od.OrderId)
+                   .HasDatabaseName("IX_OrderDetails_OrderId");
         }
     }
 }

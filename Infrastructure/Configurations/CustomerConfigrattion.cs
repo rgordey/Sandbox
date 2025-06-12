@@ -13,6 +13,10 @@ namespace Infrastructure.Configurations
             builder.Property(c => c.FirstName).IsRequired().HasMaxLength(50);
             builder.Property(c => c.LastName).IsRequired().HasMaxLength(50);
             builder.Property(c => c.Email).IsRequired().HasMaxLength(100);
+
+            builder.HasIndex(c => c.Email)
+                   .IsUnique()
+                   .HasDatabaseName("IX_Customers_Email");
         }
     }
 }
