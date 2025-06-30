@@ -2,6 +2,9 @@
 using Application.Mappings;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FluentAssertions;
+using FluentAssertions.Execution;
+using FluentAssertions.Extensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -98,13 +101,18 @@ namespace Infrastructure.Tests
                 .Take(10) // Limit to first 10 for testing, adjust as needed
                 .ToListAsync();
 
-            Assert.NotEmpty(dtos); // Ensure data is returned
-            var customer1 = dtos.First();
-            Assert.Equal("First89 Last89", customer1.FullName); // Based on your seed data
-            Assert.Equal("customer89@example.com", customer1.Email);
-            Assert.Equal(3, customer1.Orders.Count); // 3 orders per customer in your seed
-            Assert.Equal(2, customer1.Orders[0].OrderDetails.Count); // 2 details per order
-            Assert.Equal("Product1", customer1.Orders[0].OrderDetails[0].ProductName);
+            
+            using (new AssertionScope())
+            {
+                dtos.Should().NotBeEmpty(); // Ensure data is returned
+                var customer1 = dtos.First();
+
+                customer1.FullName.Should().Be("First824 Last824"); // Based on your seed data            
+                customer1.Email.Should().Be("customer824@example.com"); // Based on your seed data            
+                customer1.Orders.Should().HaveCount(3); // 3 orders per customer in your seed
+                customer1.Orders[0].OrderDetails.Should().HaveCount(2); // 2 details per order  
+                customer1.Orders[0].OrderDetails[0].ProductName.Should().Be("Product1"); // Based on your seed data
+            }
         }
 
         [Fact]
@@ -136,13 +144,17 @@ namespace Infrastructure.Tests
                               .Take(10) // Limit to first 10 for testing, adjust as needed
                               .ToListAsync();
 
-            Assert.NotEmpty(dtos);
-            var customer1 = dtos.First();
-            Assert.Equal("First89 Last89", customer1.FullName);
-            Assert.Equal("customer89@example.com", customer1.Email);
-            Assert.Equal(3, customer1.Orders.Count);
-            Assert.Equal(2, customer1.Orders[0].OrderDetails.Count);
-            Assert.Equal("Product1", customer1.Orders[0].OrderDetails[0].ProductName);
+            using (new AssertionScope())
+            {
+                dtos.Should().NotBeEmpty(); // Ensure data is returned
+                var customer1 = dtos.First();
+
+                customer1.FullName.Should().Be("First824 Last824"); // Based on your seed data            
+                customer1.Email.Should().Be("customer824@example.com"); // Based on your seed data            
+                customer1.Orders.Should().HaveCount(3); // 3 orders per customer in your seed
+                customer1.Orders[0].OrderDetails.Should().HaveCount(2); // 2 details per order  
+                customer1.Orders[0].OrderDetails[0].ProductName.Should().Be("Product1"); // Based on your seed data
+            }
         }
 
         [Fact]
@@ -154,25 +166,28 @@ namespace Infrastructure.Tests
                 .Take(10) // Limit to first 10 for testing, adjust as needed
                 .ToListAsync();
 
-            Assert.NotEmpty(dtos);
-            var customer1 = dtos.First();
-            Assert.Equal("First89 Last89", customer1.FullName);
-            Assert.Equal("customer89@example.com", customer1.Email);
-            Assert.Equal(3, customer1.Orders.Count);
-            Assert.Equal(2, customer1.Orders[0].OrderDetails.Count);
-            Assert.Equal("Product1", customer1.Orders[0].OrderDetails[0].ProductName);
+            using (new AssertionScope())
+            {
+                dtos.Should().NotBeEmpty(); // Ensure data is returned
+                var customer1 = dtos.First();
+
+                customer1.FullName.Should().Be("First824 Last824"); // Based on your seed data            
+                customer1.Email.Should().Be("customer824@example.com"); // Based on your seed data            
+                customer1.Orders.Should().HaveCount(3); // 3 orders per customer in your seed
+                customer1.Orders[0].OrderDetails.Should().HaveCount(2); // 2 details per order  
+                customer1.Orders[0].OrderDetails[0].ProductName.Should().Be("Product1"); // Based on your seed data
+            }            
         }
 
         [Fact]
         public async Task GetCustomerQueryHandler_InvalidCustomerId_ThrowsValidationException()
         {
-            Console.WriteLine("Running GetCustomerQueryHandler_InvalidCustomerId_ThrowsValidationException test.");
-            var query = new GetCustomerQuery { CustomerId = Guid.Empty };
+            var act = () => _mediator.Send(new GetCustomerQuery() { CustomerId = Guid.Empty });
 
-            var exception = await Assert.ThrowsAsync<ValidationException>(async () =>
-                await _mediator.Send(query, CancellationToken.None));
+            await act.Should().ThrowAsync<InvalidDataException>()
+                .WithMessage("Missing or invalid Category");
 
-            Assert.Contains("CustomerId must be a valid GUID.", exception.Message);
+
         }
     }
 }

@@ -23,7 +23,8 @@ namespace Presentation.Benchmark
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(_connectionString, opt => 
                 {
-                    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);                    
+                    opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+                    
                 }), ServiceLifetime.Transient);
 
             // Configure AutoMapper
