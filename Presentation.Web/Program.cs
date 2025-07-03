@@ -1,13 +1,12 @@
 using Application.Mappings;
 using Application.Validators;
-using AutoMapper;
 using Domain;
 using FluentValidation;
 using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.Abstractions;
+using Serilog;
 using Transactions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,11 +42,23 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(GetCustomersQuery).Assembly);
     cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+    cfg.LicenseKey = builder.Configuration["ApiKeys:AutoMapperApiKey"];
 });
 
-builder.Services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
 
-builder.Services.AddAutoMapper(action => action.AddProfile<MappingProfile>());
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+
+//builder.Services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+
+builder.Services.AddSerilog();
+
+builder.Services.AddAutoMapper(action => 
+{ 
+    action.AddProfile<MappingProfile>(); 
+    action.LicenseKey = builder.Configuration["ApiKeys:AutoMapperApiKey"];
+});
 
 // Add FluentValidation
 builder.Services.AddValidatorsFromAssembly(typeof(UpdateCustomerCommandValidator).Assembly);

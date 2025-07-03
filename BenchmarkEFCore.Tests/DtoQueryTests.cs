@@ -4,7 +4,6 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using FluentAssertions.Extensions;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,11 +31,17 @@ namespace Infrastructure.Tests
                         options.UseSqlServer("Server=.;Database=EfCoreBenchmark;Trusted_Connection=True;TrustServerCertificate=True;"))
                     .AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance)
                     .AddAutoMapper(action => action.AddProfile<MappingProfile>())
+                    .AddMediatR(cfg =>
+                    {
+                        cfg.RegisterServicesFromAssembly(typeof(GetCustomersQuery).Assembly);
+                        cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+                    })
                     .BuildServiceProvider();
 
                 _scope = services.CreateScope();
                 _context = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 _mapper = _scope.ServiceProvider.GetRequiredService<IMapper>();
+                _mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
                 Console.WriteLine("DtoQueryTests constructor completed successfully.");
             }
             catch (Exception ex)
@@ -183,14 +188,12 @@ namespace Infrastructure.Tests
         }
 
         [Fact]
-        public async Task GetCustomerQueryHandler_InvalidCustomerId_ThrowsValidationException()
+        public async Task UpdateCustomerCommand_InvalidCustomerId_ThrowsValidationException()
         {
-            var act = () => _mediator.Send(new GetCustomerQuery() { CustomerId = Guid.Empty });
+            var act = () => _mediator.Send(new UpdateCustomerCommand() { Customer = new CustomerDto() { Id = Guid.Empty } });
 
-            await act.Should().ThrowAsync<NullReferenceException>()
-                .WithMessage("Object reference not set to an instance of an object.");
-
-
+            await act.Should().ThrowAsync<Exception>()
+                .WithMessage("User not found");
         }
     }
 }
