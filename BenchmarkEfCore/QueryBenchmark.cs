@@ -6,6 +6,8 @@ using BenchmarkDotNet.Attributes;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Presentation.Benchmark
 {
@@ -27,8 +29,13 @@ namespace Presentation.Benchmark
                     
                 }), ServiceLifetime.Transient);
 
+            services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+
             // Configure AutoMapper
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(action => 
+            {
+                action.AddProfile<MappingProfile>();                
+            });
 
             _serviceProvider = services.BuildServiceProvider(validateScopes: true);
 

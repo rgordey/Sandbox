@@ -2,6 +2,7 @@
 using Application.Mappings;
 using AutoMapper;
 using Domain;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
 namespace ApplicationTests
@@ -12,7 +13,8 @@ namespace ApplicationTests
 
         public MapperTests()
         {
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>());
+            var loggerFactory = NullLoggerFactory.Instance;
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>(), loggerFactory);
             _mapper = config.CreateMapper();
         }
 

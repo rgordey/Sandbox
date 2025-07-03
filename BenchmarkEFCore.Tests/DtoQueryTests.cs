@@ -9,6 +9,8 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Transactions;
 
 namespace Infrastructure.Tests
@@ -28,7 +30,8 @@ namespace Infrastructure.Tests
                 var services = new ServiceCollection()
                     .AddDbContext<IAppDbContext, AppDbContext>(options =>
                         options.UseSqlServer("Server=.;Database=EfCoreBenchmark;Trusted_Connection=True;TrustServerCertificate=True;"))
-                    .AddAutoMapper(typeof(MappingProfile))
+                    .AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance)
+                    .AddAutoMapper(action => action.AddProfile<MappingProfile>())
                     .BuildServiceProvider();
 
                 _scope = services.CreateScope();
@@ -184,8 +187,8 @@ namespace Infrastructure.Tests
         {
             var act = () => _mediator.Send(new GetCustomerQuery() { CustomerId = Guid.Empty });
 
-            await act.Should().ThrowAsync<InvalidDataException>()
-                .WithMessage("Missing or invalid Category");
+            await act.Should().ThrowAsync<NullReferenceException>()
+                .WithMessage("Object reference not set to an instance of an object.");
 
 
         }

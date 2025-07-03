@@ -7,9 +7,11 @@ using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Transactions;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");;
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -24,6 +26,8 @@ builder.Services.AddDbContext<IAppDbContext, AppDbContext>(options =>
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     
 });
+
+
 
 builder.Services
      .AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -41,7 +45,9 @@ builder.Services.AddMediatR(cfg =>
     cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 });
 
-builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+
+builder.Services.AddAutoMapper(action => action.AddProfile<MappingProfile>());
 
 // Add FluentValidation
 builder.Services.AddValidatorsFromAssembly(typeof(UpdateCustomerCommandValidator).Assembly);
