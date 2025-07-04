@@ -5,15 +5,18 @@ using FluentValidation;
 using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Extensions.DependencyInjection;
 using Serilog;
+using Services;
 using Transactions;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");;
 
-// Add services to the container.
-builder.Services.AddRazorPages();
+
 
 builder.Services.AddDbContext<IAppDbContext, AppDbContext>(options =>
 {
@@ -47,21 +50,34 @@ builder.Services.AddMediatR(cfg =>
 
 
 Log.Logger = new LoggerConfiguration()
+    .WriteTo.Seq("http://localhost:5341")
     .WriteTo.Console()
     .CreateLogger();
 
 //builder.Services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
 
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
+builder.Services.AddSendGrid(options =>
+{
+    options.ApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
+});
+
+
 builder.Services.AddSerilog();
 
 builder.Services.AddAutoMapper(action => 
 { 
-    action.AddProfile<MappingProfile>(); 
+    action.AddMaps(typeof(MappingProfile).Assembly);
     action.LicenseKey = builder.Configuration["ApiKeys:AutoMapperApiKey"];
 });
 
 // Add FluentValidation
 builder.Services.AddValidatorsFromAssembly(typeof(UpdateCustomerCommandValidator).Assembly);
+
+// Add services to the container.
+builder.Services.AddRazorPages();
+
 
 var app = builder.Build();
 

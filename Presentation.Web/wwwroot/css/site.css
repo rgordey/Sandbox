@@ -29,3 +29,161 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Table Styling */
+#customersTable {
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: visible;
+    min-height: 200px;
+}
+
+    #customersTable thead th {
+        background-color: #007bff;
+        color: white;
+        border-bottom: 2px solid #0056b3;
+        text-align: center;
+        padding: 12px;
+    }
+
+    #customersTable tbody tr {
+        transition: background-color 0.3s ease;
+    }
+
+        #customersTable tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+    #customersTable td {
+        vertical-align: middle;
+        padding: 12px;
+    }
+
+/* Button Group Styling */
+.btn-group .btn {
+    border-radius: 4px;
+}
+
+    .btn-group .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+        transition: all 0.2s ease;
+    }
+
+.btn-outline-primary {
+    border-color: #007bff;
+}
+
+.btn-outline-info {
+    border-color: #17a2b8;
+}
+
+.btn-outline-danger {
+    border-color: #dc3545;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-outline-info:hover {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Card and Container */
+.card {
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.card-header {
+    border-bottom: 2px solid #0056b3;
+    padding: 15px 20px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* DataTables Search and Pagination */
+.dataTables_filter input {
+    border-radius: 20px;
+    padding: 8px 15px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s ease;
+}
+
+    .dataTables_filter input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 119, 255, 0.3);
+    }
+
+.dataTables_paginate .pagination {
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.dataTables_paginate .page-item {
+    margin: 0 2px;
+}
+
+    .dataTables_paginate .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #0056b3;
+        color: white;
+    }
+
+.dataTables_paginate .page-link {
+    color: #007bff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+    .dataTables_paginate .page-link:hover {
+        background-color: #e9ecef;
+        color: #0056b3;
+    }
+
+.first-page, .last-page {
+    margin-left: 5px;
+}
+
+    .first-page:hover, .last-page:hover {
+        background-color: #e9ecef;
+        color: #0056b3;
+    }
+
+/* Length Menu */
+.dataTables_length select {
+    border-radius: 4px;
+    padding: 4px 8px;
+    border: 1px solid #ced4da;
+}
+
+    .dataTables_length select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 119, 255, 0.3);
+    }
+
+/* General Spacing */
+.container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Bootstrap Icons (if not already included) */
+.bi {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    background-size: cover;
+}

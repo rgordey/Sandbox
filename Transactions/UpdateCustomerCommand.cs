@@ -8,7 +8,7 @@ namespace Transactions
 {
     public class UpdateCustomerCommand : ICommand<bool>
     {
-        public CustomerDto Customer { get; set; }
+        public CustomerDto Customer { get; set; } = null!;
     }
 
     public class UpdateCustomerCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<UpdateCustomerCommand, bool>

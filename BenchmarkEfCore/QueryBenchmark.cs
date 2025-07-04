@@ -4,10 +4,13 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BenchmarkDotNet.Attributes;
 using Infrastructure;
+using Mapster;
+using Mapster.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Domain;
 
 namespace Presentation.Benchmark
 {
@@ -23,19 +26,42 @@ namespace Presentation.Benchmark
 
             // Configure EF Core with SQL Server
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(_connectionString, opt => 
+                options.UseSqlServer(_connectionString, opt =>
                 {
                     opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                    
                 }), ServiceLifetime.Transient);
 
             services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
 
             // Configure AutoMapper
-            services.AddAutoMapper(action => 
+            services.AddAutoMapper(action =>
             {
-                action.AddProfile<MappingProfile>();                
+                action.AddProfile<MappingProfile>();
             });
+
+            // Configure Mapster
+            TypeAdapterConfig.GlobalSettings
+                .ForType<Customer, CustomerDto>()
+                .Map(dest => dest.FullName, src => src.FirstName + " " + src.LastName);
+
+            TypeAdapterConfig.GlobalSettings
+                .ForType<CustomerDto, Customer>()
+                .Map(dest => dest.FirstName, src => src.FullName.Split(new[] { ' ' }, 2)[0])
+                .Map(dest => dest.LastName, src => src.FullName.Split(new[] { ' ' }, 2)[1]);
+
+            TypeAdapterConfig.GlobalSettings
+                .ForType<Order, OrderDto>();
+
+            TypeAdapterConfig.GlobalSettings
+                .ForType<OrderDto, Order>();
+
+            TypeAdapterConfig.GlobalSettings
+                .ForType<OrderDetail, OrderDetailDto>();
+
+            TypeAdapterConfig.GlobalSettings
+                .ForType<OrderDetailDto, OrderDetail>();
+
+            TypeAdapterConfig.GlobalSettings.Compile();
 
             _serviceProvider = services.BuildServiceProvider(validateScopes: true);
 
@@ -43,7 +69,7 @@ namespace Presentation.Benchmark
             using var scope = _serviceProvider.CreateScope();
             var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
             mapper.ConfigurationProvider.CompileMappings();
-            mapper.ConfigurationProvider.AssertConfigurationIsValid(); // Validate mappings at startup
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
 
             // Ensure database is created (no seeding for remote DB)
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -134,6 +160,16 @@ namespace Presentation.Benchmark
             var mapper = scope.ServiceProvider.GetRequiredService<IMapper>();
             return await context.Customers
                 .ProjectTo<CustomerDto>(mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
+
+        [Benchmark]
+        public async Task<List<CustomerDto>> MapsterProjectToAsync()
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            return await context.Customers
+                .ProjectToType<CustomerDto>()
                 .ToListAsync();
         }
 
