@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="15.0.0" />
-    <PackageReference Include="BenchmarkDotNet" Version="0.15.3-nightly.20250702.271" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.3-nightly.20250705.274" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.3-pre02" />
     <PackageReference Include="Mapster.EFCore" Version="5.1.3-pre02" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
