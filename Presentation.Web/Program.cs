@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using SendGrid.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Events;
 using Services;
 using Transactions;
 
@@ -50,6 +51,8 @@ builder.Services.AddMediatR(cfg =>
 
 
 Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .MinimumLevel.Override("AutoMapper", LogEventLevel.Debug)
     .WriteTo.Seq("http://localhost:5341")
     .WriteTo.Console()
     .CreateLogger();
