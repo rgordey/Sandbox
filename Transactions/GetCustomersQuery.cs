@@ -1,8 +1,8 @@
 ﻿using Application.Core;
 using Application.Core.Abstractions;
+using Application.Core.Common.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 namespace Transactions
