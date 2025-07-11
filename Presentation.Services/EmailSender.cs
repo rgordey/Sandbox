@@ -2,7 +2,7 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace Application.Core.Services
+namespace Presentation.Services
 {
     public class EmailSender : IEmailSender
     {

@@ -1,6 +1,7 @@
 ﻿using Application.Core;
 using Application.Core.Common.Behaviors;
 using Application.Core.Common.Interfaces;
+using Application.Core.Features.Customers.Commands;
 using Application.Core.Features.Customers.Queries;
 using Application.Core.Mappings;
 using AutoMapper;

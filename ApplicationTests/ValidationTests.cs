@@ -1,7 +1,7 @@
 ﻿using Application.Core;
+using Application.Core.Features.Customers.Commands;
 using Application.Core.Validators;
 using FluentValidation.TestHelper;
-using Transactions;
 
 namespace ApplicationTests
 {

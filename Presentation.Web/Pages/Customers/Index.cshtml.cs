@@ -1,10 +1,7 @@
 ﻿using Application.Core;
-using AutoMapper;
-using Domain;
+using Application.Core.Features.Customers.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using Transactions;
 
 namespace Presentation.Web.Pages.Customers
 {

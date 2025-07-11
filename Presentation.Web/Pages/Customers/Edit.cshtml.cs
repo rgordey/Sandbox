@@ -1,17 +1,10 @@
 ﻿using Application.Core;
-using Domain;
+using Application.Core.Features.Customers.Commands;
+using Application.Core.Features.Customers.Queries;
 using FluentValidation;
-using Infrastructure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Transactions;
 
 namespace Presentation.Web.Pages.Customers
 {

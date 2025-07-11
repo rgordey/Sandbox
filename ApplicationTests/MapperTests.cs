@@ -3,7 +3,6 @@ using Application.Core.Mappings;
 using AutoMapper;
 using Domain;
 using Microsoft.Extensions.Logging.Abstractions;
-using Xunit;
 
 namespace ApplicationTests
 {
