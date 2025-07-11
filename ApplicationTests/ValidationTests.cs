@@ -1,5 +1,5 @@
 ﻿using Application.Core;
-using Application.Validators;
+using Application.Core.Validators;
 using FluentValidation.TestHelper;
 using Transactions;
 

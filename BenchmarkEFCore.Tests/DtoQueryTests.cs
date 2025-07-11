@@ -2,7 +2,7 @@
 using Application.Core.Common.Behaviors;
 using Application.Core.Common.Interfaces;
 using Application.Core.Features.Customers.Queries;
-using Application.Mappings;
+using Application.Core.Mappings;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using FluentAssertions;

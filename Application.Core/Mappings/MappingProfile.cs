@@ -1,8 +1,7 @@
-﻿using Application.Core;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain;
 
-namespace Application.Mappings
+namespace Application.Core.Mappings
 {
     // AutoMapper Profile    
     public class MappingProfile : Profile

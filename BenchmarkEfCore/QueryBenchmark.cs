@@ -1,5 +1,4 @@
 ﻿using Application.Core;
-using Application.Mappings;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BenchmarkDotNet.Attributes;
@@ -11,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Domain;
+using Application.Core.Mappings;
 
 namespace Presentation.Benchmark
 {

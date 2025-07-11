@@ -1,8 +1,9 @@
 using Application.Core.Common.Behaviors;
 using Application.Core.Common.Interfaces;
 using Application.Core.Features.Customers.Queries;
-using Application.Mappings;
-using Application.Validators;
+using Application.Core.Mappings;
+using Application.Core.Services;
+using Application.Core.Validators;
 using Domain;
 using FluentValidation;
 using Infrastructure;
@@ -14,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 using SendGrid.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
-using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");;

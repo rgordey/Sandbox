@@ -11,12 +11,8 @@
 	</PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application.Validators\Application.Validators.csproj" />
-    <ProjectReference Include="..\Application\Application.Mappings.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Services\Services.csproj" />
-    <ProjectReference Include="..\Transactions\Transactions.csproj" />
   </ItemGroup>
 
   <ItemGroup>

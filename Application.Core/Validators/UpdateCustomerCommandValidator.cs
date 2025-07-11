@@ -1,7 +1,7 @@
 ﻿using Application.Core.Features.Customers.Commands;
 using FluentValidation;
 
-namespace Application.Validators
+namespace Application.Core.Validators
 {
     public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
     {
