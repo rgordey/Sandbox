@@ -2,6 +2,7 @@
 using Application.Core.Abstractions;
 using Application.Core.Common.Interfaces;
 using AutoMapper;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Transactions
@@ -15,18 +16,15 @@ namespace Transactions
     {
         public async Task<bool> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
         {
-            // Fetch the entity with tracking
             var customer = await context.Customers
                 .AsTracking()
                 .FirstOrDefaultAsync(u => u.Id == command.Customer.Id, cancellationToken);
 
             if (customer == null)
-                throw new Exception("User not found");
+                throw new Exception($"{nameof(Customer)} not found with Id of {command.Customer.Id}"); 
 
-            // Map the command to the entity
             mapper.Map(command.Customer, customer);
 
-            // Save changes
             await context.SaveChangesAsync(cancellationToken);
 
             return true;
