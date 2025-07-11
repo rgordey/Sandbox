@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 
-namespace Transactions
+namespace Application.Core.Common.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand<TResponse>

@@ -1,5 +1,7 @@
 ﻿using Application.Core;
+using Application.Core.Common.Behaviors;
 using Application.Core.Common.Interfaces;
+using Application.Core.Features.Customers.Queries;
 using Application.Mappings;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -11,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Transactions;
 
 namespace Infrastructure.Tests
 {

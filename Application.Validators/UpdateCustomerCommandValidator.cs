@@ -1,5 +1,5 @@
-﻿using FluentValidation;
-using Transactions;
+﻿using Application.Core.Features.Customers.Commands;
+using FluentValidation;
 
 namespace Application.Validators
 {

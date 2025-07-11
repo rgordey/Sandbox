@@ -1,4 +1,6 @@
+using Application.Core.Common.Behaviors;
 using Application.Core.Common.Interfaces;
+using Application.Core.Features.Customers.Queries;
 using Application.Mappings;
 using Application.Validators;
 using Domain;
@@ -13,7 +15,6 @@ using SendGrid.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Events;
 using Services;
-using Transactions;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");;

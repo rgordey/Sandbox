@@ -1,11 +1,10 @@
-﻿using Application.Core;
-using Application.Core.Abstractions;
+﻿using Application.Core.Abstractions;
 using Application.Core.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Transactions
+namespace Application.Core.Features.Customers.Commands
 {
     public class UpdateCustomerCommand : ICommand<bool>
     {

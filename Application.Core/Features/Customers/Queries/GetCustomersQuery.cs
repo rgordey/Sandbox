@@ -1,11 +1,10 @@
-﻿using Application.Core;
-using Application.Core.Abstractions;
+﻿using Application.Core.Abstractions;
 using Application.Core.Common.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Transactions
+namespace Application.Core.Features.Customers.Queries
 {
     public sealed class GetCustomersQuery : IQuery<List<CustomerDto>>
     {
