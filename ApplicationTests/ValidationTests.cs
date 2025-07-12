@@ -1,6 +1,6 @@
 ﻿using Application;
-using Application.Core.Validators;
 using Application.Features.Customers.Commands;
+using Application.Validators;
 using FluentValidation.TestHelper;
 
 namespace ApplicationTests

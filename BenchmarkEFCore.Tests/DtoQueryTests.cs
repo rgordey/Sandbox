@@ -81,6 +81,7 @@ namespace Infrastructure.Tests
             Console.WriteLine("DisposeAsync started.");
             _scope.Dispose();
             Console.WriteLine("DisposeAsync completed.");
+            await Task.CompletedTask;
         }
 
         [Fact]
@@ -196,7 +197,7 @@ namespace Infrastructure.Tests
             var act = () => _mediator.Send(new UpdateCustomerCommand() { Customer = new CustomerDto() { Id = Guid.Empty } });
 
             await act.Should().ThrowAsync<Exception>()
-                .WithMessage("User not found");
+                .WithMessage("Customer not found with Id of 00000000-0000-0000-0000-000000000000");
         }
     }
 }

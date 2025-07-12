@@ -1,8 +1,8 @@
 using Application.Common.Behaviors;
 using Application.Common.Interfaces;
-using Application.Core.Validators;
 using Application.Features.Customers.Queries;
 using Application.Mappings;
+using Application.Validators;
 using Domain;
 using FluentValidation;
 using Infrastructure;
