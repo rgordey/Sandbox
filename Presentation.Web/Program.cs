@@ -22,7 +22,7 @@ var connectionString = builder.Configuration.GetConnectionString("AppDbContextCo
 
 builder.Services.AddDbContext<IAppDbContext, AppDbContext>(options =>
 {
-    options.UseSqlServer("Server=.;Database=EfCoreBenchmark;Trusted_Connection=True;TrustServerCertificate=True;", opt =>
+    options.UseSqlServer(connectionString, opt =>
     {
         opt.MigrationsAssembly("Infrastructure");
         opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
@@ -52,8 +52,8 @@ builder.Services.AddMediatR(cfg =>
 
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
-    .MinimumLevel.Override("AutoMapper", LogEventLevel.Debug)
+    .MinimumLevel.Information()
+    .MinimumLevel.Override("LuckyPennySoftware.AutoMapper", LogEventLevel.Verbose)    
     .WriteTo.Seq("http://localhost:5341")
     .WriteTo.Console()
     .CreateLogger();
