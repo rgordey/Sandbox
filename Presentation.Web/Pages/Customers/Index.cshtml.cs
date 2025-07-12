@@ -1,5 +1,5 @@
-﻿using Application.Core;
-using Application.Core.Features.Customers.Queries;
+﻿using Application;
+using Application.Features.Customers.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

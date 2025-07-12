@@ -1,10 +1,10 @@
-﻿using Application.Core.Features.Customers.Queries;
-using ArchUnitNET.Domain;
+﻿using ArchUnitNET.Domain;
 using ArchUnitNET.Loader;
 using ArchUnitNET.Fluent;
 using ArchUnitNET.xUnit;
 using Domain;
 using Infrastructure;
+using Application.Features.Customers.Queries;
 
 namespace ApplicationTests
 {

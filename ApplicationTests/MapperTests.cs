@@ -1,5 +1,5 @@
-﻿using Application.Core;
-using Application.Core.Mappings;
+﻿using Application;
+using Application.Mappings;
 using AutoMapper;
 using Domain;
 using Microsoft.Extensions.Logging.Abstractions;

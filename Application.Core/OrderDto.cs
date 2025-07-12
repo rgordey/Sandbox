@@ -1,4 +1,4 @@
-﻿namespace Application.Core
+﻿namespace Application
 {
     public class OrderDto
     {

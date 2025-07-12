@@ -1,6 +1,6 @@
-﻿using Application.Core;
-using Application.Core.Features.Customers.Commands;
-using Application.Core.Features.Customers.Queries;
+﻿using Application;
+using Application.Features.Customers.Commands;
+using Application.Features.Customers.Queries;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

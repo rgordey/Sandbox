@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace Application.Core.Abstractions
+namespace Application.Abstractions
 {
     public interface IQuery<out TResponse> : IRequest<TResponse>
     {

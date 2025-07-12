@@ -1,8 +1,8 @@
-﻿using Application.Core.Abstractions;
+﻿using Application.Abstractions;
 using FluentValidation;
 using MediatR;
 
-namespace Application.Core.Common.Behaviors
+namespace Application.Common.Behaviors
 {
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICommand<TResponse>

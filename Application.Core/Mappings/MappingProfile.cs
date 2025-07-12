@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Domain;
 
-namespace Application.Core.Mappings
+namespace Application.Mappings
 {
     // AutoMapper Profile    
     public class MappingProfile : Profile

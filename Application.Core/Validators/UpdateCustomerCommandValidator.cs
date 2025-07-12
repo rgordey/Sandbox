@@ -1,4 +1,4 @@
-﻿using Application.Core.Features.Customers.Commands;
+﻿using Application.Features.Customers.Commands;
 using FluentValidation;
 
 namespace Application.Core.Validators
