@@ -4,14 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Presentation.Web</title>
-    <script type="importmap"></script> <!-- Note: This is empty; ensure it's intended or remove if unused -->
-    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Presentation.Web.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.bootstrap5.min.css" />
-
-    <!-- Fallback for DataTables CSS -->
-    <link rel="stylesheet" href="~/lib/dataTables.bootstrap5.min.css" asp-fallback-href="~/lib/dataTables.bootstrap5.min.css" asp-fallback-test-class="dataTables_wrapper" asp-fallback-test-property="display" asp-fallback-test-value="block" />
+    <link rel="stylesheet" href="~/lib/datatables/css/dataTables.bootstrap5.min.css" />
+    <!-- Add Font Awesome for icons if not already -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 </head>
 <body>
     <header>
@@ -30,6 +27,9 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Customers/Index">Customers</a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -44,26 +44,15 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            © 2025 - Presentation.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            © 2024 - Presentation.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
 
-    <!-- Load jQuery once (prefer local for reliability) -->
-    <script src="~/lib/jquery/jquery.min.js"></script>
-    <!-- Fallback to CDN if local fails -->
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" asp-fallback-src="~/lib/jquery/jquery.min.js" asp-fallback-test="window.jQuery" asp-fallback-test-expression="typeof window.jQuery === 'function'"></script>
-
-    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables.net/dataTables.min.js"></script>
+    <script src="~/lib/datatables.net/dataTables.bootstrap5.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-    <!-- DataTables scripts with fallback -->
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap5.min.js"></script>
-    <script asp-fallback-src="~/lib/jquery.dataTables.min.js" asp-fallback-test="window.DataTable" asp-fallback-test-expression="typeof window.DataTable === 'function'">
-        // Fallback content if CDN fails
-        document.write('<script src="~/lib/jquery.dataTables.min.js"><\/script>');
-        document.write('<script src="~/lib/dataTables.bootstrap5.min.js"><\/script>');
-    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

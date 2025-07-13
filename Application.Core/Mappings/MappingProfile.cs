@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.Features.Customers.Commands;
+using AutoMapper;
 using Domain;
 
 namespace Application.Mappings
@@ -8,11 +9,22 @@ namespace Application.Mappings
     {
         public MappingProfile()
         {
+            CreateMap<CreateCustomerCommand, Customer>()
+                .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
+                .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress));
+
+            CreateMap<Address, AddressDto>()
+                .ReverseMap();
+
             CreateMap<Customer, CustomerDto>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
+                .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
                 .ReverseMap()
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FullName.Split(new[] { ' ' }, 2)[0]))
-                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.FullName.Split(new[] { ' ' }, 2)[1]));
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.FullName.Split(new[] { ' ' }, 2)[1]))
+                .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
+                .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress));
 
             CreateMap<Order, OrderDto>()
                 .ReverseMap();

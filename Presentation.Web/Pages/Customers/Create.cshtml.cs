@@ -1,33 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Application;
+using Application.Features.Customers.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Domain;
-using Infrastructure;
 
 namespace Presentation.Web.Pages.Customers
 {
     public class CreateModel : PageModel
     {
-        private readonly Infrastructure.AppDbContext _context;
+        private readonly ISender _sender;
 
-        public CreateModel(Infrastructure.AppDbContext context)
+        public CreateModel(ISender sender)
         {
-            _context = context;
-        }
-
-        public IActionResult OnGet()
-        {
-            return Page();
+            _sender = sender;
         }
 
         [BindProperty]
-        public Customer Customer { get; set; } = default!;
+        public CreateCustomerCommand Command { get; set; } = new();
 
-        // For more information, see https://aka.ms/RazorPagesCRUD.
+        public IActionResult OnGet()
+        {
+            Command.MailingAddress = new AddressDto();
+            Command.ShippingAddress = new AddressDto();
+            return Page();
+        }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -35,8 +32,7 @@ namespace Presentation.Web.Pages.Customers
                 return Page();
             }
 
-            _context.Customers.Add(Customer);
-            await _context.SaveChangesAsync();
+            await _sender.Send(Command);
 
             return RedirectToPage("./Index");
         }

@@ -5,38 +5,126 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h1 class="card-title mb-0"><i class="fas fa-user-edit me-2"></i>Edit Customer</h1>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+                <input type="hidden" asp-for="Customer.Id" />
 
-<h4>Customer</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Customer.Id" />
-            <div class="form-group">
-                
-                <label asp-for="Customer.FullName" class="control-label"></label>
-                <input asp-for="Customer.FullName" class="form-control" />
-                <span asp-validation-for="Customer.FullName" class="text-danger"></span>
-            </div>            
-            <div class="form-group">
-                
-                <label asp-for="Customer.Email" class="control-label"></label>
-                <input asp-for="Customer.Email" class="form-control" />
-                <span asp-validation-for="Customer.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <!-- Personal Information Section -->
+                <h5 class="mb-3"><i class="fas fa-user me-2"></i>Personal Information</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Customer.FullName" class="form-label">Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                            <input asp-for="Customer.FullName" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.FullName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Customer.Email" class="form-label">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input asp-for="Customer.Email" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Mailing Address Section -->
+                <h5 class="mb-3"><i class="fas fa-mail-bulk me-2"></i>Mailing Address</h5>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Customer.MailingAddress.Street" class="form-label">Street</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-road"></i></span>
+                            <input asp-for="Customer.MailingAddress.Street" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.MailingAddress.Street" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Customer.MailingAddress.City" class="form-label">City</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-city"></i></span>
+                            <input asp-for="Customer.MailingAddress.City" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.MailingAddress.City" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Customer.MailingAddress.State" class="form-label">State</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input asp-for="Customer.MailingAddress.State" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.MailingAddress.State" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Customer.MailingAddress.ZipCode" class="form-label">Zip Code</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
+                            <input asp-for="Customer.MailingAddress.ZipCode" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.MailingAddress.ZipCode" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Shipping Address Section -->
+                <h5 class="mb-3"><i class="fas fa-shipping-fast me-2"></i>Shipping Address</h5>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Customer.ShippingAddress.Street" class="form-label">Street</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-road"></i></span>
+                            <input asp-for="Customer.ShippingAddress.Street" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.ShippingAddress.Street" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Customer.ShippingAddress.City" class="form-label">City</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-city"></i></span>
+                            <input asp-for="Customer.ShippingAddress.City" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.ShippingAddress.City" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Customer.ShippingAddress.State" class="form-label">State</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            <input asp-for="Customer.ShippingAddress.State" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.ShippingAddress.State" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Customer.ShippingAddress.ZipCode" class="form-label">Zip Code</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-map-pin"></i></span>
+                            <input asp-for="Customer.ShippingAddress.ZipCode" class="form-control" />
+                        </div>
+                        <span asp-validation-for="Customer.ShippingAddress.ZipCode" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-page="./Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>Back to List</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-page="./Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -5,49 +5,31 @@
     ViewData["Title"] = "Customer Directory";
 }
 
+@Html.AntiForgeryToken()
+
 <div class="container py-4">
     <div class="card shadow-sm border-0">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h1 class="mb-0">Customer Directory</h1>
-            <a asp-page="Create" class="btn btn-light btn-sm">Create New</a>
+            <h1 class="mb-0"><i class="fas fa-users me-2"></i>Customer Directory</h1>
+            <a asp-page="Create" class="btn btn-light btn-sm"><i class="fas fa-plus me-1"></i>Create New</a>
         </div>
         <div class="card-body p-4">
-            @if (Model.Customers == null)
-            {
-                <p class="text-danger">Error: Customers data is null. Check database connection.</p>
-            }
-            else if (!Model.Customers.Any())
-            {
-                <p class="text-warning">No customers found. <a asp-page="Create">Add a new customer</a>?</p>
-            }
-            else
-            {
-                <table id="customersTable" class="table table-striped table-hover">
-                    <thead class="table-primary">
-                        <tr>
-                            <th>FullName</th>
-                            <th>Email</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.Customers)
-                        {
-                            <tr>
-                                <td>@item.FullName</td>
-                                <td>@item.Email</td>
-                                <td>
-                                    <div class="btn-group" role="group">
-                                        <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary me-1">Edit</a>
-                                        <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info me-1">Details</a>
-                                        <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+            <div id="loadingSpinner" class="text-center" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div id="errorAlert" class="alert alert-danger" role="alert" style="display: none;">Error loading customers. Please try again.</div>
+            <table id="customersTable" class="table table-striped table-hover w-100">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">FullName</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -55,55 +37,72 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            if ($.fn.DataTable.isDataTable('#customersTable')) {
-                $('#customersTable').DataTable().destroy();
-            }
             var table = $('#customersTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '?handler=DataTable',
+                    type: 'POST',
+                    data: function (d) {
+                        d.__RequestVerificationToken = $('input[name="__RequestVerificationToken"]').val();
+                    },
+                    beforeSend: function () {
+                        $('#loadingSpinner').show();
+                        $('#errorAlert').hide();
+                    },
+                    complete: function () {
+                        $('#loadingSpinner').hide();
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error('DataTables Error: ' + thrown + ' - Status: ' + xhr.status + ' - Response: ' + xhr.responseText);
+                        $('#errorAlert').show();
+                    }
+                },
+                columns: [
+                    { data: 'fullName', name: 'FullName', orderable: true, searchable: true },
+                    { data: 'email', name: 'Email', orderable: true, searchable: true },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return `
+                                <div class="btn-group" role="group" aria-label="Actions for ${row.fullName}">
+                                    <a href="/Customers/Edit?id=${row.id}" class="btn btn-sm btn-outline-primary me-1" title="Edit" aria-label="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="/Customers/Details?id=${row.id}" class="btn btn-sm btn-outline-info me-1" title="Details" aria-label="Details">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="/Customers/Delete?id=${row.id}" class="btn btn-sm btn-outline-danger" title="Delete" aria-label="Delete">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            `;
+                        }
+                    }
+                ],
                 paging: true,
+                pagingType: 'full_numbers',
                 searching: true,
                 ordering: true,
                 pageLength: 10,
-                lengthMenu: [5, 10, 25, 50, 100], // Expanded options
+                lengthMenu: [5, 10, 25, 50, 100],
                 responsive: true,
                 language: {
                     searchPlaceholder: "Search by name or email...",
                     paginate: {
-                        previous: '<i class="bi bi-chevron-left"></i>', // Bootstrap icon
-                        next: '<i class="bi bi-chevron-right"></i>'
+                        first: 'First',
+                        last: 'Last',
+                        previous: '<i class="fas fa-chevron-left"></i>',
+                        next: '<i class="fas fa-chevron-right"></i>'
                     },
-                    lengthMenu: "Show _MENU_ entries"
+                    lengthMenu: "Show _MENU_ entries",
+                    emptyTable: "No customers found. <a href='/Customers/Create'>Add a new customer</a>?"
                 },
-                dom: '<"row"<"col-sm-6"l><"col-sm-6"f>>t<"row"<"col-sm-6"i><"col-sm-6"p>>',
-                columns: [
-                    { data: "FullName", defaultContent: "" },
-                    { data: "Email", defaultContent: "" },
-                    { data: null, defaultContent: "", render: function (data, type, row) {
-                        return '<div class="btn-group" role="group">' +
-                               '<a href="/Customers/Edit/' + (row.Id || '') + '" class="btn btn-sm btn-outline-primary me-1">Edit</a>' +
-                               '<a href="/Customers/Details/' + (row.Id || '') + '" class="btn btn-sm btn-outline-info me-1">Details</a>' +
-                               '<a href="/Customers/Delete/' + (row.Id || '') + '" class="btn btn-sm btn-outline-danger">Delete</a>' +
-                               '</div>';
-                    }}
-                ],
                 initComplete: function () {
-                    var api = this.api();
-                    console.log("DataTables initialized. Total rows: ", api.data().length);
-                    console.log("Raw data: ", api.data());
+                    console.log("DataTables initialized.");
                 }
-            });
-
-            // Add custom pagination buttons
-            $('.dataTables_paginate').append(
-                '<button class="btn btn-sm btn-outline-secondary mx-1 first-page" title="First Page">First</button>' +
-                '<button class="btn btn-sm btn-outline-secondary mx-1 last-page" title="Last Page">Last</button>'
-            );
-
-            $('.first-page').on('click', function () {
-                table.page('first').draw('page');
-            });
-
-            $('.last-page').on('click', function () {
-                table.page('last').draw('page');
             });
         });
     </script>
