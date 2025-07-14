@@ -10,6 +10,8 @@ namespace Application.Mappings
         public MappingProfile()
         {
             CreateMap<CreateCustomerCommand, Customer>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Orders, opt => opt.Ignore())
                 .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
                 .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress));
 

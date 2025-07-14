@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Presentation.Services;
 using SendGrid.Extensions.DependencyInjection;
 using Serilog;
-using Serilog.Events;
+using Serilog.Debugging;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("AppDbContextConnection") ?? throw new InvalidOperationException("Connection string 'AppDbContextConnection' not found.");;
@@ -51,14 +51,14 @@ builder.Services.AddMediatR(cfg =>
 });
 
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .MinimumLevel.Override("LuckyPennySoftware.AutoMapper", LogEventLevel.Verbose)    
-    .WriteTo.Seq("http://localhost:5341")
-    .WriteTo.Console()
-    .CreateLogger();
+SelfLog.Enable(Console.Error);
 
-//builder.Services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
+builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
+    .ReadFrom.Configuration(context.Configuration)
+    .Enrich.FromLogContext()
+    .Enrich.WithMachineName()
+    .WriteTo.Console()
+    .WriteTo.Seq("http://localhost:5341"));
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
@@ -67,8 +67,6 @@ builder.Services.AddSendGrid(options =>
     options.ApiKey = Environment.GetEnvironmentVariable("SENDGRID_API_KEY");
 });
 
-
-builder.Services.AddSerilog();
 
 builder.Services.AddAutoMapper(action => 
 { 
