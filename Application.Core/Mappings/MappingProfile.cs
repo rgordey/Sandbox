@@ -1,4 +1,5 @@
 ﻿using Application.Features.Customers.Commands;
+using Application.Features.Orders.Commands;
 using AutoMapper;
 using Domain;
 
@@ -28,11 +29,32 @@ namespace Application.Mappings
                 .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
                 .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress));
 
-            CreateMap<Order, OrderDto>()
+            CreateMap<CreateOrderCommand, Order>()
+                .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.CustomerId))
+                .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.OrderDate))
+                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
+                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails));
+
+            CreateMap<UpdateOrderCommand, Order>()
+                .ForMember(dest => dest.OrderDate, opt => opt.MapFrom(src => src.OrderDate))
+                .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
+                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails));
+
+            // Add to Application/Mappings/MappingProfile.cs (merge with existing)
+            CreateMap<Product, ProductDto>()
                 .ReverseMap();
 
             CreateMap<OrderDetail, OrderDetailDto>()
-                .ReverseMap();
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : null))
+                .ReverseMap()
+                .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
+                .ForMember(dest => dest.Product, opt => opt.Ignore()); // Ignore navigation in reverse
+
+            // Add to Application/Mappings/MappingProfile.cs (merge with existing)
+            CreateMap<Order, OrderDto>()
+                .ForMember(dest => dest.CustomerFullName, opt => opt.MapFrom(src => src.Customer != null ? src.Customer.FirstName + " " + src.Customer.LastName : string.Empty));
+
+            
         }
     }
 }

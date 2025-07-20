@@ -110,7 +110,6 @@ namespace Presentation.Benchmark
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             Id = od.Id,
-                            ProductName = od.ProductName,
                             Quantity = od.Quantity,
                             UnitPrice = od.UnitPrice
                         }).ToList()
@@ -143,7 +142,6 @@ namespace Presentation.Benchmark
                                   OrderDetails = og.Where(x => x.od != null).Select(x => new OrderDetailDto
                                   {
                                       Id = x.od.Id,
-                                      ProductName = x.od.ProductName,
                                       Quantity = x.od.Quantity,
                                       UnitPrice = x.od.UnitPrice
                                   }).ToList()

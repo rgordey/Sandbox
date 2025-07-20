@@ -1,18 +1,17 @@
-﻿// Presentation.Web/Pages/Customers/EditModel.cs
+// Presentation.Web/Pages/Orders/DeleteModel.cs
 using Application;
-using Application.Features.Customers.Commands;
-using Application.Features.Customers.Queries;
+using Application.Features.Orders.Commands;
+using Application.Features.Orders.Queries;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Presentation.Web.Pages.Customers
+namespace Presentation.Web.Pages.Orders
 {
-    public class EditModel(IMediator mediator) : PageModel
+    public class DeleteModel(IMediator mediator) : PageModel
     {
-        [BindProperty]
-        public CustomerDto Customer { get; set; } = default!;
+        public OrderDto Order { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -21,20 +20,19 @@ namespace Presentation.Web.Pages.Customers
                 return NotFound();
             }
 
-            var customer = await mediator.Send(new GetCustomerQuery { CustomerId = id });
-            if (customer == null)
+            Order = await mediator.Send(new GetOrderQuery { OrderId = id });
+            if (Order == null)
             {
                 return NotFound();
             }
-            Customer = customer;
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(Guid id)
         {
             try
             {
-                await mediator.Send(new UpdateCustomerCommand { Customer = Customer });
+                await mediator.Send(new DeleteOrderCommand { OrderId = id });
             }
             catch (ValidationException ex)
             {
@@ -42,6 +40,7 @@ namespace Presentation.Web.Pages.Customers
                 {
                     ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
+                Order = await mediator.Send(new GetOrderQuery { OrderId = id });
                 return Page();
             }
 

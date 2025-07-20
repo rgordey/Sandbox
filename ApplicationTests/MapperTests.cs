@@ -63,7 +63,7 @@ namespace ApplicationTests
                 TotalAmount = 100m,
                 OrderDetails = new List<OrderDetail>
                 {
-                    new OrderDetail { Id = Guid.NewGuid(), OrderId = orderId, ProductName = "Product1", Quantity = 1, UnitPrice = 50m }
+                    new OrderDetail { Id = Guid.NewGuid(), OrderId = orderId, Quantity = 1, UnitPrice = 50m }
                 }
             };
 
@@ -83,15 +83,13 @@ namespace ApplicationTests
             {
                 Id = Guid.NewGuid(),
                 OrderId = Guid.NewGuid(),
-                ProductName = "Product1",
                 Quantity = 1,
                 UnitPrice = 50m
             };
 
             var dto = _mapper.Map<OrderDetailDto>(orderDetail);
 
-            Assert.Equal(orderDetail.Id, dto.Id);
-            Assert.Equal(orderDetail.ProductName, dto.ProductName);
+            Assert.Equal(orderDetail.Id, dto.Id);            
             Assert.Equal(orderDetail.Quantity, dto.Quantity);
             Assert.Equal(orderDetail.UnitPrice, dto.UnitPrice);
         }

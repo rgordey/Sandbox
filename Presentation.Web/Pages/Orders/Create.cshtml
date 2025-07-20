@@ -1,0 +1,161 @@
+﻿@page
+@model Presentation.Web.Pages.Orders.CreateModel
+
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+            <h1 class="card-title mb-0"><i class="fas fa-plus me-2"></i>Create Order</h1>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Order.CustomerId" class="form-label">Customer</label>
+                        <select asp-for="Order.CustomerId" class="form-control" required>
+                            <option value="">Select a customer</option>
+                            @foreach (var customer in Model.Customers)
+                            {
+                                <option value="@customer.Id">@customer.FullName (@customer.Email)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="Order.CustomerId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Order.OrderDate" class="form-label">Order Date</label>
+                        <input asp-for="Order.OrderDate" class="form-control" type="date" required />
+                        <span asp-validation-for="Order.OrderDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Order.TotalAmount" class="form-label">Total Amount</label>
+                        <input asp-for="Order.TotalAmount" class="form-control" readonly />
+                        <span asp-validation-for="Order.TotalAmount" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <h5 class="mb-3"><i class="fas fa-list me-2"></i>Order Details</h5>
+                <div id="order-details">
+                    <!-- Initial detail row -->
+                    <div class="order-detail-row row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Product</label>
+                            <select name="Order.OrderDetails[0].ProductId" class="form-control product-select" required>
+                                <option value="">Select a product</option>
+                                @foreach (var product in Model.Products)
+                                {
+                                    <option value="@product.Id" data-price="@product.Price">@product.Name (@product.Price.ToString("C"))</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Quantity</label>
+                            <input type="number" name="Order.OrderDetails[0].Quantity" class="form-control quantity" min="1" required />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Unit Price</label>
+                            <input type="text" name="Order.OrderDetails[0].UnitPrice" class="form-control unit-price" readonly />
+                        </div>
+                        <div class="col-md-2 align-self-end">
+                            <button type="button" class="btn btn-danger remove-row mt-2" style="display: none;">Remove</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" id="add-detail" class="btn btn-secondary mt-2"><i class="fas fa-plus"></i> Add Detail</button>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-page="./Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>Back to List</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const orderDetailsDiv = document.getElementById('order-details');
+            const addDetailButton = document.getElementById('add-detail');
+            let detailIndex = 0;
+
+            // Update total amount when quantity or product changes
+            function updateTotal() {
+                let total = 0;
+                document.querySelectorAll('.order-detail-row').forEach(row => {
+                    const quantity = parseInt(row.querySelector('.quantity').value) || 0;
+                    const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+                    total += quantity * unitPrice;
+                });
+                document.getElementsByName('Order.TotalAmount')[0].value = total.toFixed(2);
+            }
+
+            // Handle product selection and unit price
+            orderDetailsDiv.addEventListener('change', function (e) {
+                if (e.target.classList.contains('product-select')) {
+                    const row = e.target.closest('.order-detail-row');
+                    const selectedOption = e.target.selectedOptions[0];
+                    const unitPriceInput = row.querySelector('.unit-price');
+                    unitPriceInput.value = selectedOption ? selectedOption.getAttribute('data-price') : '0.00';
+                    updateTotal();
+                } else if (e.target.classList.contains('quantity')) {
+                    updateTotal();
+                }
+            });
+
+            // Add new detail row
+            addDetailButton.addEventListener('click', function () {
+                detailIndex++;
+                const newRow = document.createElement('div');
+                newRow.className = 'order-detail-row row mb-3';
+                newRow.innerHTML = `
+                    <div class="col-md-4">
+                        <label class="form-label">Product</label>
+                        <select name="Order.OrderDetails[${detailIndex}].ProductId" class="form-control product-select" required>
+                            <option value="">Select a product</option>
+                            @foreach (var product in Model.Products)
+                            {
+                                    <option value="@product.Id" data-price="@product.Price">@product.Name (@product.Price.ToString("C"))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="Order.OrderDetails[${detailIndex}].Quantity" class="form-control quantity" min="1" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Unit Price</label>
+                        <input type="text" name="Order.OrderDetails[${detailIndex}].UnitPrice" class="form-control unit-price" readonly />
+                    </div>
+                    <div class="col-md-2 align-self-end">
+                        <button type="button" class="btn btn-danger remove-row mt-2">Remove</button>
+                    </div>
+                `;
+                orderDetailsDiv.appendChild(newRow);
+
+                // Show remove button for all rows except the first when multiple exist
+                document.querySelectorAll('.remove-row').forEach(btn => {
+                    btn.style.display = orderDetailsDiv.children.length > 1 ? 'block' : 'none';
+                });
+            });
+
+            // Remove row
+            orderDetailsDiv.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-row')) {
+                    e.target.closest('.order-detail-row').remove();
+                    document.querySelectorAll('.remove-row').forEach(btn => {
+                        btn.style.display = orderDetailsDiv.children.length > 1 ? 'block' : 'none';
+                    });
+                    updateTotal();
+                }
+            });
+        });
+    </script>
+}

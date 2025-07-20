@@ -1,12 +1,12 @@
-﻿namespace Application
+﻿// Updated Application/OrderDetailDto.cs
+namespace Application
 {
     public class OrderDetailDto
     {
         public Guid Id { get; set; }
-        public string ProductName { get; set; } = null!;
+        public Guid ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
+        public string? ProductName { get; set; } // Optional for display, populated via query
     }
 }
-
-

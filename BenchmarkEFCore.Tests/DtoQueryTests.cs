@@ -104,7 +104,6 @@ namespace Infrastructure.Tests
                         OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                         {
                             Id = od.Id,
-                            ProductName = od.ProductName,
                             Quantity = od.Quantity,
                             UnitPrice = od.UnitPrice
                         }).ToList()
@@ -147,7 +146,6 @@ namespace Infrastructure.Tests
                                       OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
                                       {
                                           Id = od.Id,
-                                          ProductName = od.ProductName,
                                           Quantity = od.Quantity,
                                           UnitPrice = od.UnitPrice
                                       }).ToList()

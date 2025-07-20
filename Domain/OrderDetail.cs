@@ -1,14 +1,14 @@
-﻿namespace Domain
+﻿// Updated Domain/OrderDetail.cs
+namespace Domain
 {
     public class OrderDetail
     {
         public Guid Id { get; set; }
         public Guid OrderId { get; set; }
-        public string ProductName { get; set; } = null!;
+        public Guid ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal UnitPrice { get; set; }
-        public Order? Order { get; set; } 
+        public Order? Order { get; set; }
+        public Product? Product { get; set; }
     }
 }
-
-

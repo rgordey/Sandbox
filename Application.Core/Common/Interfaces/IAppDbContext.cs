@@ -10,6 +10,7 @@ namespace Application.Common.Interfaces
         DbSet<Customer> Customers { get; set; }
         DbSet<OrderDetail> OrderDetails { get; set; }
         DbSet<Order> Orders { get; set; }
+        DbSet<Product> Products { get; set; }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
