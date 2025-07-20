@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions;
+using Application.Common;
 using Application.Common.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -17,13 +18,7 @@ namespace Application.Features.Customers.Queries
         public string SearchValue { get; set; } = string.Empty;
     }
 
-    public class DataTableResponse<T>
-    {
-        public int Draw { get; set; }
-        public int RecordsTotal { get; set; }
-        public int RecordsFiltered { get; set; }
-        public List<T> Data { get; set; } = new List<T>(); // Use List for serialization
-    }
+    
 
     internal sealed class GetCustomersDataTableQueryHandler(IAppDbContext context, IMapper mapper) : IQueryHandler<GetCustomersDataTableQuery, DataTableResponse<CustomerDto>>
     {

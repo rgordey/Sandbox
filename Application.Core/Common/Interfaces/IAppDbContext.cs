@@ -8,9 +8,13 @@ namespace Application.Common.Interfaces
         DbSet<ApplicationRole> ApplicationRoles { get; set; }
         DbSet<ApplicationUser> ApplicationUsers { get; set; }
         DbSet<Customer> Customers { get; set; }
-        DbSet<OrderDetail> OrderDetails { get; set; }
-        DbSet<Order> Orders { get; set; }
+        DbSet<SalesOrderDetail> OrderDetails { get; set; }
+        DbSet<SalesOrder> Orders { get; set; }
         DbSet<Product> Products { get; set; }
+        DbSet<Vendor> Vendors { get; set; }
+        DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
+        DbSet<ProductVendor> ProductVendors { get; set; }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

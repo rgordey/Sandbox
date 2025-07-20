@@ -1,0 +1,35 @@
+﻿using Application.Common.Interfaces;
+using AutoMapper;
+using Domain;
+using MediatR;
+
+namespace Application.Features.Products.Commands
+{
+    public sealed record CreateProductCommand(
+        string Name,
+        decimal BasePrice,
+        List<ProductVendorDto> Vendors
+    ) : IRequest<Guid>;
+
+    internal sealed class CreateProductCommandHandler(IAppDbContext context, IMapper mapper) : IRequestHandler<CreateProductCommand, Guid>
+    {
+        public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        {
+            var product = mapper.Map<Product>(request);
+            product.Id = Guid.NewGuid();
+
+            product.ProductVendors = request.Vendors.Select(v => new ProductVendor
+            {
+                ProductId = product.Id,
+                VendorId = v.VendorId,
+                VendorPrice = v.VendorPrice,
+                StockQuantity = v.StockQuantity
+            }).ToList();
+
+            context.Products.Add(product);
+            await context.SaveChangesAsync(cancellationToken);
+
+            return product.Id;
+        }
+    }
+}

@@ -22,6 +22,10 @@
       "provider": "unpkg",
       "library": "jquery-validation@1.21.0",
       "destination": "wwwroot/lib/jquery-validation/"
+    },
+    {
+      "library": "font-awesome@6.7.2",
+      "destination": "wwwroot/lib/font-awesome/"
     }
   ]
 }

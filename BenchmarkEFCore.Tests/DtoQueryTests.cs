@@ -96,12 +96,12 @@ namespace Infrastructure.Tests
                     Id = c.Id,
                     FullName = c.FirstName + " " + c.LastName,
                     Email = c.Email,
-                    Orders = c.Orders.Select(o => new OrderDto
+                    Orders = c.Orders.Select(o => new SalesOrderDto
                     {
                         Id = o.Id,
                         OrderDate = o.OrderDate,
                         TotalAmount = o.TotalAmount,
-                        OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
+                        OrderDetails = o.OrderDetails.Select(od => new SalesOrderDetailDto
                         {
                             Id = od.Id,
                             Quantity = od.Quantity,
@@ -138,12 +138,12 @@ namespace Infrastructure.Tests
                                   Id = c.Id,
                                   FullName = c.FirstName + " " + c.LastName,
                                   Email = c.Email,
-                                  Orders = c.Orders.Select(o => new OrderDto
+                                  Orders = c.Orders.Select(o => new SalesOrderDto
                                   {
                                       Id = o.Id,
                                       OrderDate = o.OrderDate,
                                       TotalAmount = o.TotalAmount,
-                                      OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
+                                      OrderDetails = o.OrderDetails.Select(od => new SalesOrderDetailDto
                                       {
                                           Id = od.Id,
                                           Quantity = od.Quantity,

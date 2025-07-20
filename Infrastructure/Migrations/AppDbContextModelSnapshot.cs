@@ -157,7 +157,105 @@ namespace Infrastructure.Migrations
                     b.ToTable("Customers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Order", b =>
+            modelBuilder.Entity("Domain.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("BasePrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Products_Name");
+
+                    b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.ProductVendor", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VendorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("StockQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("VendorPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("ProductId", "VendorId");
+
+                    b.HasIndex("VendorId");
+
+                    b.ToTable("ProductVendors");
+                });
+
+            modelBuilder.Entity("Domain.PurchaseOrder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("VendorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VendorId")
+                        .HasDatabaseName("IX_PurchaseOrders_VendorId");
+
+                    b.ToTable("PurchaseOrders", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.PurchaseOrderDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId")
+                        .HasDatabaseName("IX_PurchaseOrderDetails_OrderId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("PurchaseOrderDetails", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.SalesOrder", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -178,10 +276,10 @@ namespace Infrastructure.Migrations
                     b.HasIndex("CustomerId")
                         .HasDatabaseName("IX_Orders_CustomerId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("SalesOrders", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.OrderDetail", b =>
+            modelBuilder.Entity("Domain.SalesOrderDetail", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -208,30 +306,34 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ProductId")
                         .HasDatabaseName("IX_OrderDetails_ProductId");
 
-                    b.ToTable("OrderDetails", (string)null);
+                    b.ToTable("SalesOrderDetails", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Product", b =>
+            modelBuilder.Entity("Domain.Vendor", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ContactEmail")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name")
-                        .HasDatabaseName("IX_Products_Name");
+                    b.HasIndex("ContactEmail")
+                        .HasDatabaseName("IX_Vendors_ContactEmail");
 
-                    b.ToTable("Products", (string)null);
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Vendors_Name");
+
+                    b.ToTable("Vendors", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -418,7 +520,56 @@ namespace Infrastructure.Migrations
                     b.Navigation("ShippingAddress");
                 });
 
-            modelBuilder.Entity("Domain.Order", b =>
+            modelBuilder.Entity("Domain.ProductVendor", b =>
+                {
+                    b.HasOne("Domain.Product", "Product")
+                        .WithMany("ProductVendors")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Vendor", "Vendor")
+                        .WithMany("ProductVendors")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("Domain.PurchaseOrder", b =>
+                {
+                    b.HasOne("Domain.Vendor", "Vendor")
+                        .WithMany("PurchaseOrders")
+                        .HasForeignKey("VendorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Vendor");
+                });
+
+            modelBuilder.Entity("Domain.PurchaseOrderDetail", b =>
+                {
+                    b.HasOne("Domain.PurchaseOrder", "Order")
+                        .WithMany("OrderDetails")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Domain.SalesOrder", b =>
                 {
                     b.HasOne("Domain.Customer", "Customer")
                         .WithMany("Orders")
@@ -429,9 +580,9 @@ namespace Infrastructure.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Domain.OrderDetail", b =>
+            modelBuilder.Entity("Domain.SalesOrderDetail", b =>
                 {
-                    b.HasOne("Domain.Order", "Order")
+                    b.HasOne("Domain.SalesOrder", "Order")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -446,6 +597,48 @@ namespace Infrastructure.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Domain.Vendor", b =>
+                {
+                    b.OwnsOne("Domain.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("VendorId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(100)
+                                .HasColumnType("nvarchar(100)")
+                                .HasColumnName("Address_City");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("Address_State");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("nvarchar(200)")
+                                .HasColumnName("Address_Street");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("nvarchar(20)")
+                                .HasColumnName("Address_ZipCode");
+
+                            b1.HasKey("VendorId");
+
+                            b1.ToTable("Vendors");
+
+                            b1.WithOwner()
+                                .HasForeignKey("VendorId");
+                        });
+
+                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -504,9 +697,26 @@ namespace Infrastructure.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("Domain.Order", b =>
+            modelBuilder.Entity("Domain.Product", b =>
+                {
+                    b.Navigation("ProductVendors");
+                });
+
+            modelBuilder.Entity("Domain.PurchaseOrder", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("Domain.SalesOrder", b =>
+                {
+                    b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("Domain.Vendor", b =>
+                {
+                    b.Navigation("ProductVendors");
+
+                    b.Navigation("PurchaseOrders");
                 });
 #pragma warning restore 612, 618
         }

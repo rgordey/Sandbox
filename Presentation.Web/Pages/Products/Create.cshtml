@@ -1,0 +1,92 @@
+﻿@page
+@model Presentation.Web.Pages.Products.CreateModel
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h1 class="mb-0"><i class="fas fa-plus me-2"></i>Create New Product</h1>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Name" class="form-label"></label>
+                    <input asp-for="Command.Name" class="form-control" />
+                    <span asp-validation-for="Command.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.BasePrice" class="form-label"></label>
+                    <input asp-for="Command.BasePrice" class="form-control" type="number" step="0.01" />
+                    <span asp-validation-for="Command.BasePrice" class="text-danger"></span>
+                </div>
+                <h4 class="mb-3">Vendors</h4>
+                <table id="vendorsTable" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Vendor</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button type="button" class="btn btn-secondary mb-3" onclick="addVendorRow()">Add Vendor</button>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-2"><i class="fas fa-save me-1"></i>Save</button>
+                    <a asp-page="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        var vendors = []; // Array to store vendor data for submission
+        var vendorList = []; // Assume fetched via AJAX
+
+        $(document).ready(function () {
+            // Fetch vendors for dropdown
+            $.get('/Vendors/GetVendors', function (data) {
+                vendorList = data;
+            });
+        });
+
+        function addVendorRow() {
+            var row = `<tr>
+                <td><select class="form-control vendor-select">
+                    <option value="">Select Vendor</option>
+                    ${vendorList.map(v => `<option value="${v.id}">${v.name}</option>`).join('')}
+                </select></td>
+                <td><input type="number" class="form-control price-input" step="0.01" /></td>
+                <td><input type="number" class="form-control stock-input" /></td>
+                <td><button type="button" class="btn btn-danger" onclick="removeVendorRow(this)">Remove</button></td>
+            </tr>`;
+            $('#vendorsTable tbody').append(row);
+        }
+
+        function removeVendorRow(button) {
+            $(button).closest('tr').remove();
+        }
+
+        // On form submit, collect vendors and add to hidden input
+        $('form').submit(function () {
+            vendors = [];
+            $('#vendorsTable tbody tr').each(function () {
+                var vendorId = $(this).find('.vendor-select').val();
+                var price = $(this).find('.price-input').val();
+                var stock = $(this).find('.stock-input').val();
+                if (vendorId) {
+                    vendors.push({ VendorId: vendorId, VendorPrice: price, StockQuantity: stock });
+                }
+            });
+            $('<input />').attr('type', 'hidden').attr('name', 'Command.Vendors').attr('value', JSON.stringify(vendors)).appendTo('form');
+        });
+    </script>
+}

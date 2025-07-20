@@ -26,7 +26,7 @@ namespace Application.Validators
     }
 
     // Assuming OrderDetailDtoValidator exists or define it
-    public class OrderDetailDtoValidator : AbstractValidator<OrderDetailDto>
+    public class OrderDetailDtoValidator : AbstractValidator<SalesOrderDetailDto>
     {
         public OrderDetailDtoValidator()
         {

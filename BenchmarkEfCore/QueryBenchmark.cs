@@ -50,16 +50,16 @@ namespace Presentation.Benchmark
                 .Map(dest => dest.LastName, src => src.FullName.Split(new[] { ' ' }, 2)[1]);
 
             TypeAdapterConfig.GlobalSettings
-                .ForType<Order, OrderDto>();
+                .ForType<SalesOrder, SalesOrderDto>();
 
             TypeAdapterConfig.GlobalSettings
-                .ForType<OrderDto, Order>();
+                .ForType<SalesOrderDto, SalesOrder>();
 
             TypeAdapterConfig.GlobalSettings
-                .ForType<OrderDetail, OrderDetailDto>();
+                .ForType<SalesOrderDetail, SalesOrderDetailDto>();
 
             TypeAdapterConfig.GlobalSettings
-                .ForType<OrderDetailDto, OrderDetail>();
+                .ForType<SalesOrderDetailDto, SalesOrderDetail>();
 
             TypeAdapterConfig.GlobalSettings.Compile();
 
@@ -102,12 +102,12 @@ namespace Presentation.Benchmark
                     Id = c.Id,
                     FullName = c.FirstName + " " + c.LastName,
                     Email = c.Email,
-                    Orders = c.Orders.Select(o => new OrderDto
+                    Orders = c.Orders.Select(o => new SalesOrderDto
                     {
                         Id = o.Id,
                         OrderDate = o.OrderDate,
                         TotalAmount = o.TotalAmount,
-                        OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
+                        OrderDetails = o.OrderDetails.Select(od => new SalesOrderDetailDto
                         {
                             Id = od.Id,
                             Quantity = od.Quantity,
@@ -134,12 +134,12 @@ namespace Presentation.Benchmark
                               Id = g.Key.Id,
                               FullName = g.Key.FirstName + " " + g.Key.LastName,
                               Email = g.Key.Email,
-                              Orders = g.Where(x => x.o != null).GroupBy(x => x.o.Id).Select(og => new OrderDto
+                              Orders = g.Where(x => x.o != null).GroupBy(x => x.o.Id).Select(og => new SalesOrderDto
                               {
                                   Id = og.Key,
                                   OrderDate = og.First().o.OrderDate,
                                   TotalAmount = og.First().o.TotalAmount,
-                                  OrderDetails = og.Where(x => x.od != null).Select(x => new OrderDetailDto
+                                  OrderDetails = og.Where(x => x.od != null).Select(x => new SalesOrderDetailDto
                                   {
                                       Id = x.od.Id,
                                       Quantity = x.od.Quantity,

@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Orders.Queries
 {
-    public sealed class GetOrdersQuery : IQuery<List<OrderDto>>
+    public sealed class GetOrdersQuery : IQuery<List<SalesOrderDto>>
     {
         public Guid? CustomerId { get; set; } // Optional filter by customer
     }
 
-    internal sealed class GetOrdersQueryHandler(IAppDbContext context, IMapper mapper) : IQueryHandler<GetOrdersQuery, List<OrderDto>>
+    internal sealed class GetOrdersQueryHandler(IAppDbContext context, IMapper mapper) : IQueryHandler<GetOrdersQuery, List<SalesOrderDto>>
     {
-        public async Task<List<OrderDto>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
+        public async Task<List<SalesOrderDto>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
         {
             var query = context.Orders.AsQueryable();
             if (request.CustomerId.HasValue)
@@ -22,7 +22,7 @@ namespace Application.Features.Orders.Queries
                 query = query.Where(o => o.CustomerId == request.CustomerId.Value);
             }
             return await query
-                .ProjectTo<OrderDto>(mapper.ConfigurationProvider)
+                .ProjectTo<SalesOrderDto>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }
     }

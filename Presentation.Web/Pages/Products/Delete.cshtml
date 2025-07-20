@@ -1,0 +1,61 @@
+﻿@page "{id:guid}"
+@model Presentation.Web.Pages.Products.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-danger text-white">
+            <h1 class="mb-0"><i class="fas fa-trash me-2"></i>Delete Product</h1>
+        </div>
+        <div class="card-body p-4">
+            @if (Model.Product == null)
+            {
+                <div class="alert alert-warning" role="alert">
+                    Product not found.
+                </div>
+            }
+            else
+            {
+                <h3>Are you sure you want to delete this product?</h3>
+                <dl class="row">
+                    <dt class="col-sm-3">ID</dt>
+                    <dd class="col-sm-9">@Model.Product.Id</dd>
+
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.Product.Name</dd>
+
+                    <dt class="col-sm-3">Base Price</dt>
+                    <dd class="col-sm-9">@Model.Product.BasePrice</dd>
+                </dl>
+                <h4 class="mb-3">Vendors</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Vendor Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var vendor in Model.Product.Vendors)
+                        {
+                            <tr>
+                                <td>@vendor.Name</td>
+                                <td>@vendor.VendorPrice</td>
+                                <td>@vendor.StockQuantity</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <form method="post">
+                    <input type="hidden" asp-for="Product.Id" />
+                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash me-1"></i>Delete</button>
+                    <a asp-page="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Cancel</a>
+                </form>
+            }
+        </div>
+    </div>
+</div>

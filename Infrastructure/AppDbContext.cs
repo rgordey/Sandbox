@@ -9,11 +9,16 @@ namespace Infrastructure
     public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>, IAppDbContext
     {
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<SalesOrder> Orders { get; set; }
+        public DbSet<SalesOrderDetail> OrderDetails { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public DbSet<ApplicationRole> ApplicationRoles { get; set; }
+
+        public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<ProductVendor> ProductVendors { get; set; } 
+        public DbSet<PurchaseOrder> PurchaseOrders { get; set; }
+        public DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

@@ -1,0 +1,56 @@
+﻿@page
+@model Presentation.Web.Pages.PurchaseOrders.CreateModel
+
+@{
+    ViewData["Title"] = "Create Purchase Order";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-success text-white">
+            <h1 class="card-title mb-0"><i class="fas fa-plus me-2"></i>Create Purchase Order</h1>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PurchaseOrder.VendorId" class="form-label">Vendor</label>
+                        <select asp-for="PurchaseOrder.VendorId" class="form-control">
+                            <option value="">Select a vendor</option>
+                            @foreach (var vendor in Model.Vendors)
+                            {
+                                <option value="@vendor.Id">@vendor.Name (@vendor.ContactEmail)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="PurchaseOrder.VendorId" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PurchaseOrder.OrderDate" class="form-label">Order Date</label>
+                        <input asp-for="PurchaseOrder.OrderDate" class="form-control" type="date" />
+                        <span asp-validation-for="PurchaseOrder.OrderDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="PurchaseOrder.TotalAmount" class="form-label">Total Amount</label>
+                        <input asp-for="PurchaseOrder.TotalAmount" class="form-control" readonly />
+                        <span asp-validation-for="PurchaseOrder.TotalAmount" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Order Details placeholder -->
+                <h5 class="mb-3"><i class="fas fa-list me-2"></i>Order Details</h5>
+                <p class="text-muted">Add order details functionality here (e.g., dynamic form with JS).</p>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-page="./Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>Back to List</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

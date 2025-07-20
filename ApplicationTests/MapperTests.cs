@@ -34,9 +34,9 @@ namespace ApplicationTests
                 FirstName = "John",
                 LastName = "Doe",
                 Email = "john.doe@example.com",
-                Orders = new List<Order>
+                Orders = new List<SalesOrder>
                 {
-                    new Order { Id = Guid.NewGuid(), CustomerId = customerId, OrderDate = DateTime.UtcNow, TotalAmount = 100m }
+                    new SalesOrder { Id = Guid.NewGuid(), CustomerId = customerId, OrderDate = DateTime.UtcNow, TotalAmount = 100m }
                 }
             };
 
@@ -55,19 +55,19 @@ namespace ApplicationTests
             var orderId = Guid.NewGuid();
             var customerId = Guid.NewGuid();
 
-            var order = new Order
+            var order = new SalesOrder
             {
                 Id = orderId,
                 CustomerId = customerId,
                 OrderDate = DateTime.UtcNow,
                 TotalAmount = 100m,
-                OrderDetails = new List<OrderDetail>
+                OrderDetails = new List<SalesOrderDetail>
                 {
-                    new OrderDetail { Id = Guid.NewGuid(), OrderId = orderId, Quantity = 1, UnitPrice = 50m }
+                    new SalesOrderDetail { Id = Guid.NewGuid(), OrderId = orderId, Quantity = 1, UnitPrice = 50m }
                 }
             };
 
-            var dto = _mapper.Map<OrderDto>(order);
+            var dto = _mapper.Map<SalesOrderDto>(order);
 
             Assert.Equal(order.Id, dto.Id);
             Assert.Equal(order.OrderDate, dto.OrderDate);
@@ -79,7 +79,7 @@ namespace ApplicationTests
         [Fact]
         public void Map_OrderDetailToDto_MapsCorrectly()
         {
-            var orderDetail = new OrderDetail
+            var orderDetail = new SalesOrderDetail
             {
                 Id = Guid.NewGuid(),
                 OrderId = Guid.NewGuid(),
@@ -87,7 +87,7 @@ namespace ApplicationTests
                 UnitPrice = 50m
             };
 
-            var dto = _mapper.Map<OrderDetailDto>(orderDetail);
+            var dto = _mapper.Map<SalesOrderDetailDto>(orderDetail);
 
             Assert.Equal(orderDetail.Id, dto.Id);            
             Assert.Equal(orderDetail.Quantity, dto.Quantity);

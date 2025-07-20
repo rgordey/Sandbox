@@ -7,18 +7,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Orders.Queries
 {
-    public sealed class GetOrderQuery : IQuery<OrderDto?>
+    public sealed class GetOrderQuery : IQuery<SalesOrderDto?>
     {
         public Guid OrderId { get; set; }
     }
 
-    internal sealed class GetOrderQueryHandler(IAppDbContext context, IMapper mapper) : IQueryHandler<GetOrderQuery, OrderDto?>
+    internal sealed class GetOrderQueryHandler(IAppDbContext context, IMapper mapper) : IQueryHandler<GetOrderQuery, SalesOrderDto?>
     {
-        public async Task<OrderDto?> Handle(GetOrderQuery query, CancellationToken cancellationToken)
+        public async Task<SalesOrderDto?> Handle(GetOrderQuery query, CancellationToken cancellationToken)
         {
             return await context.Orders
                 .Where(x => x.Id == query.OrderId)
-                .ProjectTo<OrderDto>(mapper.ConfigurationProvider)
+                .ProjectTo<SalesOrderDto>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         }
     }

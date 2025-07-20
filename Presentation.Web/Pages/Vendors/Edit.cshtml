@@ -1,0 +1,60 @@
+﻿@page "{id:guid}"
+@model Presentation.Web.Pages.Vendors.EditModel
+
+@{
+    ViewData["Title"] = "Edit Vendor";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h1 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Vendor</h1>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Command.Id" />
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Name" class="form-label"></label>
+                    <input asp-for="Command.Name" class="form-control" />
+                    <span asp-validation-for="Command.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.ContactEmail" class="form-label"></label>
+                    <input asp-for="Command.ContactEmail" class="form-control" />
+                    <span asp-validation-for="Command.ContactEmail" class="text-danger"></span>
+                </div>
+                <h4 class="mb-3">Address</h4>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Address.Street" class="form-label"></label>
+                    <input asp-for="Command.Address.Street" class="form-control" />
+                    <span asp-validation-for="Command.Address.Street" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Address.City" class="form-label"></label>
+                    <input asp-for="Command.Address.City" class="form-control" />
+                    <span asp-validation-for="Command.Address.City" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Address.State" class="form-label"></label>
+                    <input asp-for="Command.Address.State" class="form-control" />
+                    <span asp-validation-for="Command.Address.State" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Address.ZipCode" class="form-label"></label>
+                    <input asp-for="Command.Address.ZipCode" class="form-control" />
+                    <span asp-validation-for="Command.Address.ZipCode" class="text-danger"></span>
+                </div>
+                
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary me-2"><i class="fas fa-save me-1"></i>Save</button>
+                    <a asp-page="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

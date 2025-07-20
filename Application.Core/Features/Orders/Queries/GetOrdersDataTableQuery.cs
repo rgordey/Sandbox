@@ -1,5 +1,6 @@
 ﻿// Application/Features/Orders/Queries/GetOrdersDataTableQuery.cs
 using Application.Abstractions;
+using Application.Common;
 using Application.Common.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -8,7 +9,7 @@ using System.Linq.Dynamic.Core;
 
 namespace Application.Features.Orders.Queries
 {
-    public sealed class GetOrdersDataTableQuery : IQuery<DataTableResponse<OrderDto>>
+    public sealed class GetOrdersDataTableQuery : IQuery<DataTableResponse<SalesOrderDto>>
     {
         public int Draw { get; set; }
         public int Start { get; set; }
@@ -18,17 +19,11 @@ namespace Application.Features.Orders.Queries
         public string SearchValue { get; set; } = string.Empty;
     }
 
-    public class DataTableResponse<T>
-    {
-        public int Draw { get; set; }
-        public int RecordsTotal { get; set; }
-        public int RecordsFiltered { get; set; }
-        public List<T> Data { get; set; } = new List<T>(); // Use List for serialization
-    }
+    
 
-    internal sealed class GetOrdersDataTableQueryHandler(IAppDbContext context, IMapper mapper) : IQueryHandler<GetOrdersDataTableQuery, DataTableResponse<OrderDto>>
+    internal sealed class GetOrdersDataTableQueryHandler(IAppDbContext context, IMapper mapper) : IQueryHandler<GetOrdersDataTableQuery, DataTableResponse<SalesOrderDto>>
     {
-        public async Task<DataTableResponse<OrderDto>> Handle(GetOrdersDataTableQuery request, CancellationToken cancellationToken)
+        public async Task<DataTableResponse<SalesOrderDto>> Handle(GetOrdersDataTableQuery request, CancellationToken cancellationToken)
         {
             var query = context.Orders
                 .Include(o => o.Customer) // Ensure Customer is loaded for FullName projection
@@ -82,10 +77,10 @@ namespace Application.Features.Orders.Queries
             var data = await query
                 .Skip(request.Start)
                 .Take(request.Length)
-                .ProjectTo<OrderDto>(mapper.ConfigurationProvider)
+                .ProjectTo<SalesOrderDto>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
 
-            return new DataTableResponse<OrderDto>
+            return new DataTableResponse<SalesOrderDto>
             {
                 Draw = request.Draw,
                 RecordsTotal = totalRecords,

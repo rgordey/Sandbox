@@ -13,7 +13,7 @@ namespace Application.Features.Orders.Commands
         public Guid OrderId { get; set; }
         public DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
-        public List<OrderDetailDto> OrderDetails { get; set; } = new();
+        public List<SalesOrderDetailDto> OrderDetails { get; set; } = new();
     }
 
     internal sealed class UpdateOrderCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<UpdateOrderCommand, Unit>
@@ -41,12 +41,12 @@ namespace Application.Features.Orders.Commands
                 {
                     throw new Exception($"Product with Id {detail.ProductId} not found");
                 }
-                detail.UnitPrice = products[detail.ProductId].Price;
+                detail.UnitPrice = products[detail.ProductId].BasePrice;
             }
 
             mapper.Map(request, order);
             context.OrderDetails.RemoveRange(order.OrderDetails);
-            order.OrderDetails = mapper.Map<List<OrderDetail>>(request.OrderDetails);
+            order.OrderDetails = mapper.Map<List<SalesOrderDetail>>(request.OrderDetails);
             foreach (var detail in order.OrderDetails)
             {
                 detail.OrderId = order.Id;

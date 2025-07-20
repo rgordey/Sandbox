@@ -1,0 +1,59 @@
+﻿@page "{id:guid}"
+@model Presentation.Web.Pages.Products.DetailsModel
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h1 class="mb-0"><i class="fas fa-eye me-2"></i>Product Details</h1>
+            <div>
+                <a asp-page="Edit" asp-route-id="@Model.Product?.Id" class="btn btn-outline-primary btn-sm me-2"><i class="fas fa-edit me-1"></i>Edit</a>
+                <a asp-page="Index" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            @if (Model.Product == null)
+            {
+                <div class="alert alert-warning" role="alert">
+                    Product not found.
+                </div>
+            }
+            else
+            {
+                <dl class="row">
+                    <dt class="col-sm-3">ID</dt>
+                    <dd class="col-sm-9">@Model.Product.Id</dd>
+
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9">@Model.Product.Name</dd>
+
+                    <dt class="col-sm-3">Base Price</dt>
+                    <dd class="col-sm-9">@Model.Product.BasePrice</dd>
+                </dl>
+                <h4 class="mb-3">Vendors</h4>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Vendor Name</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var vendor in Model.Product.Vendors)
+                        {
+                            <tr>
+                                <td>@vendor.Name</td>
+                                <td>@vendor.VendorPrice</td>
+                                <td>@vendor.StockQuantity</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

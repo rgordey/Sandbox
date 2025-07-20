@@ -3,63 +3,92 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Presentation.Web</title>
+    <title>@ViewData["Title"] - Sandbox</title>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/lib/datatables.net/dataTables.bootstrap5.min.css" />
-    <!-- Add Font Awesome for icons if not already -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" href="/">
-                    <img src="/images/logo.png" alt="Your Site Logo" class="logo">
-                </a>
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Presentation.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Customers/Index">Customers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Orders/Index">Orders</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <div class="container">
+            <a class="navbar-brand" asp-area="" asp-page="/Index">
+                <img src="~/images/logo.png" alt="Sandbox Logo" style="height: 40px; vertical-align: middle;" />
+                Sandbox
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Index"><i class="fas fa-home me-2"></i>Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-dark" href="#" id="salesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chart-line me-2"></i>Sales
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="salesDropdown">
+                            <li>
+                                <a class="dropdown-item" asp-page="/Customers/Index">
+                                    <i class="fas fa-users me-2"></i>Customers
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-page="/SalesOrders/Index">
+                                    <i class="fas fa-shopping-cart me-2"></i>Sales Orders
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-dark" href="#" id="purchasingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-truck me-2"></i>Purchasing
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="purchasingDropdown">
+                            <li>
+                                <a class="dropdown-item" asp-page="/PurchaseOrders/Index">
+                                    <i class="fas fa-clipboard-list me-2"></i>Purchase Orders
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-page="/Products/Index">
+                                    <i class="fas fa-box me-2"></i>Products
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" asp-page="/Vendors/Index">
+                                    <i class="fas fa-building me-2"></i>Vendors
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy"><i class="fas fa-shield-alt me-2"></i>Privacy</a>
+                    </li>
+                </ul>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer border-top text-muted">
         <div class="container">
-            © 2024 - Presentation.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            © 2025 - Sandbox - <a asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
 
     <script src="~/lib/jquery/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
-    <script src="~/lib/datatables.net/dataTables.min.js"></script>
-    <script src="~/lib/datatables.net/dataTables.bootstrap5.min.js"></script>
+    <script src="~/lib/datatables.net/dataTables.min.js" asp-append-version="true"></script>
+    <script src="~/lib/datatables.net/dataTables.bootstrap5.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -12,7 +12,7 @@ namespace Application.Features.Orders.Commands
         public Guid CustomerId { get; set; }
         public DateTime OrderDate { get; set; }
         public decimal TotalAmount { get; set; }
-        public List<OrderDetailDto> OrderDetails { get; set; } = new();
+        public List<SalesOrderDetailDto> OrderDetails { get; set; } = new();
     }
 
     internal sealed class CreateOrderCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<CreateOrderCommand, Guid>
@@ -20,7 +20,7 @@ namespace Application.Features.Orders.Commands
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken ct)
         {
 
-            var order = mapper.Map<Order>(request);
+            var order = mapper.Map<SalesOrder>(request);
             order.Id = Guid.NewGuid();
             foreach (var detail in order.OrderDetails)
             {
