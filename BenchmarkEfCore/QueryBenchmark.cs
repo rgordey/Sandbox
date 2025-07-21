@@ -1,16 +1,18 @@
-﻿using AutoMapper;
+﻿using Application;
+using Application.Mappings;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Disassemblers;
+using Domain;
 using Infrastructure;
+using Infrastructure.CompiledModels;
 using Mapster;
 using Mapster.EFCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Domain;
-using Application.Mappings;
-using Application;
 
 namespace Presentation.Benchmark
 {
@@ -29,7 +31,9 @@ namespace Presentation.Benchmark
                 options.UseSqlServer(_connectionString, opt =>
                 {
                     opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                }), ServiceLifetime.Transient);
+                })
+                .UseModel(AppDbContextModel.Instance)
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);
 
             services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
 
@@ -37,6 +41,9 @@ namespace Presentation.Benchmark
             services.AddAutoMapper(action =>
             {
                 action.AddProfile<MappingProfile>();
+                action.AddProfile<CustomerProfile>();
+                action.AddProfile<OrderProfile>();
+                action.AddProfile<ProductProfile>();
             });
 
             // Configure Mapster

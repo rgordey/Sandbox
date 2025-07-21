@@ -6,6 +6,7 @@ using Application.Validators;
 using Domain;
 using FluentValidation;
 using Infrastructure;
+using Infrastructure.CompiledModels;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -28,7 +29,7 @@ builder.Services.AddDbContext<IAppDbContext, AppDbContext>(options =>
         opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
     });
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    
+    options.UseModel(AppDbContextModel.Instance);
 });
 
 

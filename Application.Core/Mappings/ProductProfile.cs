@@ -9,6 +9,7 @@ namespace Application.Mappings
         public ProductProfile()
         {
             CreateMap<CreateProductCommand, Product>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.ProductVendors, opt => opt.Ignore());
 
             CreateMap<UpdateProductCommand, Product>()
