@@ -33,7 +33,7 @@ namespace Presentation.Benchmark
                     opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                 })
                 .UseModel(AppDbContextModel.Instance)
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Transient);
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking), ServiceLifetime.Scoped);
 
             services.AddSingleton<ILoggerFactory>(NullLoggerFactory.Instance);
 
