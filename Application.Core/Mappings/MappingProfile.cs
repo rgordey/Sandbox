@@ -11,7 +11,8 @@ namespace Application.Mappings
     {
         public MappingProfile()
         {
-            
+            // Address mappings
+            CreateMap<Address, AddressDto>().ReverseMap();
         }
     }
 }

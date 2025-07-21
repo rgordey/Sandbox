@@ -13,7 +13,10 @@ namespace ApplicationTests
         public MapperTests()
         {
             var loggerFactory = NullLoggerFactory.Instance;
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<MappingProfile>(), loggerFactory);
+            var config = new MapperConfiguration(cfg => 
+            {                
+                cfg.AddMaps(typeof(MappingProfile).Assembly);
+            }, loggerFactory);
             _mapper = config.CreateMapper();
         }
 

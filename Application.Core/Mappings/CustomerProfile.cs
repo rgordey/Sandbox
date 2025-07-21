@@ -9,9 +9,7 @@ namespace Application.Mappings
     {
         public CustomerProfile()
         {
-            // Address mappings
-            CreateMap<Address, AddressDto>().ReverseMap();
-
+            
             // Customer mappings
             CreateMap<CreateCustomerCommand, Customer>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())

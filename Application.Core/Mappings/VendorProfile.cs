@@ -9,9 +9,6 @@ namespace Application.Mappings
     {
         public VendorProfile()
         {
-            // Address mappings
-            CreateMap<Address, AddressDto>().ReverseMap();
-
             // Vendor mappings
             CreateMap<CreateVendorCommand, Vendor>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
