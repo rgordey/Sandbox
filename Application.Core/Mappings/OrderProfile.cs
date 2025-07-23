@@ -1,5 +1,6 @@
 ﻿using Application;
 using Application.Features.Orders.Commands;
+using Application.Features.PurchaseOrders.Commands;
 using AutoMapper;
 using Domain;
 
@@ -29,7 +30,18 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Order, opt => opt.Ignore());
 
             // Purchase Order mappings
+
+            CreateMap<CreatePurchaseOrderCommand, PurchaseOrder>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore()) // Id is set manually in the handler
+                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails));
+
+            CreateMap<UpdatePurchaseOrderCommand, PurchaseOrder>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails));
+
             CreateMap<PurchaseOrder, PurchaseOrderDto>().ReverseMap();
+
+            CreateMap<PurchaseOrder, PurchaseOrderListDto>();
 
             CreateMap<PurchaseOrderDetail, PurchaseOrderDetailDto>()
                 .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : string.Empty))

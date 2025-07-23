@@ -1,6 +1,7 @@
 using Application;
-using Application.Features.PurchaseOrders.Commands;
 using Application.Features.Products.Queries;
+using Application.Features.PurchaseOrders.Commands;
+using Application.Features.PurchaseOrders.Queries;
 using Application.Features.Vendors.Queries;
 using FluentValidation;
 using MediatR;
@@ -9,22 +10,39 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.PurchaseOrders
 {
-    public class CreateModel(IMediator mediator) : PageModel
+    public class EditModel(IMediator mediator) : PageModel
     {
         [BindProperty]
-        public CreatePurchaseOrderCommand PurchaseOrder { get; set; } = new();
+        public UpdatePurchaseOrderCommand PurchaseOrder { get; set; } = new();
 
         public List<VendorDto> Vendors { get; set; } = new();
         public List<ProductDto> Products { get; set; } = new();
         public List<ProductVendorDto> ProductVendors { get; set; } = new();
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync(Guid id)
         {
+            var poDto = await mediator.Send(new GetPurchaseOrderQuery { PurchaseOrderId = id });
+            if (poDto == null)
+            {
+                return NotFound();
+            }
+
+            PurchaseOrder = new UpdatePurchaseOrderCommand
+            {
+                Id = poDto.Id,
+                VendorId = poDto.VendorId,
+                OrderDate = poDto.OrderDate,
+                TotalAmount = poDto.TotalAmount,
+                OrderDetails = poDto.OrderDetails
+            };
+
             Vendors = await mediator.Send(new GetVendorsQuery());
             Products = await mediator.Send(new GetProductsQuery());
             ProductVendors = await mediator.Send(new GetProductVendorsQuery());
             ViewData["Products"] = Products;
             ViewData["ProductVendors"] = ProductVendors;
+
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()

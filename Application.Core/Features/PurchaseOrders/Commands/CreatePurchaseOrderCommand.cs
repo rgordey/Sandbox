@@ -1,7 +1,6 @@
-﻿// Application/Features/PurchaseOrders/Commands/CreatePurchaseOrderCommand.cs (new)
+﻿// Application/Features/PurchaseOrders/Commands/CreatePurchaseOrderCommand.cs
 using Application.Abstractions;
 using Application.Common.Interfaces;
-using AutoMapper;
 using Domain;
 using MediatR;
 
@@ -15,15 +14,41 @@ namespace Application.Features.PurchaseOrders.Commands
         public List<PurchaseOrderDetailDto> OrderDetails { get; set; } = new();
     }
 
-    internal sealed class CreatePurchaseOrderCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<CreatePurchaseOrderCommand, Guid>
+    internal sealed class CreatePurchaseOrderCommandHandler(IAppDbContext context) : ICommandHandler<CreatePurchaseOrderCommand, Guid>
     {
         public async Task<Guid> Handle(CreatePurchaseOrderCommand request, CancellationToken ct)
         {
-            var purchaseOrder = mapper.Map<PurchaseOrder>(request);
-            purchaseOrder.Id = Guid.NewGuid();
-            context.PurchaseOrders.Add(purchaseOrder);
-            await context.SaveChangesAsync(ct);
-            return purchaseOrder.Id;
+            var purchaseOrder = new PurchaseOrder
+            {
+                Id = Guid.NewGuid(),
+                VendorId = request.VendorId,
+                OrderDate = request.OrderDate,
+                TotalAmount = request.TotalAmount
+            };
+
+            foreach (var dto in request.OrderDetails)
+            {
+                purchaseOrder.OrderDetails.Add(new PurchaseOrderDetail
+                {
+                    Id = Guid.NewGuid(),
+                    OrderId = purchaseOrder.Id,
+                    ProductId = dto.ProductId,
+                    Quantity = dto.Quantity,
+                    UnitPrice = dto.UnitPrice
+                });
+            }
+
+            try
+            {
+                context.PurchaseOrders.Add(purchaseOrder);
+                await context.SaveChangesAsync(ct);
+                return purchaseOrder.Id;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }

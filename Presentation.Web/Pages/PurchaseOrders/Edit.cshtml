@@ -1,19 +1,20 @@
-﻿@page
+﻿@page "{id:Guid}"
 @using Application
-@model Presentation.Web.Pages.PurchaseOrders.CreateModel
+@model Presentation.Web.Pages.PurchaseOrders.EditModel
 @{
-    ViewData["Title"] = "Create Purchase Order";
+    ViewData["Title"] = "Edit Purchase Order";
     var lastUpdated = DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt CDT"); // e.g., "July 22, 2025 05:54 AM CDT"
 }
 
 <div class="container py-4">
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
-            <h1 class="card-title mb-0"><i class="fas fa-plus me-2"></i>Create Purchase Order</h1>
+        <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+            <h1 class="card-title mb-0"><i class="fas fa-edit me-2"></i>Edit Purchase Order</h1>
             <small class="text-muted">Last Updated: @lastUpdated</small>
         </div>
         <div class="card-body p-4">
             <form method="post">
+                <input type="hidden" asp-for="PurchaseOrder.Id" />
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
 
                 <div class="row">
@@ -52,7 +53,34 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="orderDetailsBody"></tbody>
+                        <tbody id="orderDetailsBody">
+                            @for (int i = 0; i < Model.PurchaseOrder.OrderDetails.Count; i++)
+                            {
+                                var detail = Model.PurchaseOrder.OrderDetails[i];
+                                <tr>
+                                    <td>
+                                        <input type="hidden" name="PurchaseOrder.OrderDetails[@i].Id" value="@detail.Id" />
+                                        <select name="PurchaseOrder.OrderDetails[@i].ProductId" class="form-select product-select" onchange="updateUnitPrice(this)">
+                                            <option value="">Select a product</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="PurchaseOrder.OrderDetails[@i].Quantity" value="@detail.Quantity" class="form-control quantity" min="1" onchange="updateLineTotal(this)" />
+                                    </td>
+                                    <td>
+                                        <input type="number" name="PurchaseOrder.OrderDetails[@i].UnitPrice" value="@detail.UnitPrice" class="form-control unit-price" step="0.01" readonly />
+                                    </td>
+                                    <td>
+                                        <input type="number" class="form-control line-total" value="@((detail.Quantity * detail.UnitPrice).ToString("F2"))" readonly />
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
                     </table>
                     <button type="button" class="btn btn-primary btn-sm" id="addItemButton" onclick="addOrderDetailRow()">
                         <i class="fas fa-plus me-2"></i>Add Item
@@ -61,7 +89,7 @@
 
                 <div class="d-flex justify-content-between mt-4">
                     <a asp-page="./Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-2"></i>Back to List</a>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Create</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save</button>
                 </div>
             </form>
         </div>
@@ -109,12 +137,13 @@
     }
     <script src="~/lib/jquery/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
-    <!-- Removed DataTables scripts and initialization to prevent interference with form submission -->
     <script>
         const products = @Html.Raw(Json.Serialize(ViewData["Products"] ?? new List<ProductDto>()));
         const productVendors = @Html.Raw(Json.Serialize(ViewData["ProductVendors"] ?? new List<ProductVendorDto>()));
+        const existingDetails = @Html.Raw(Json.Serialize(Model.PurchaseOrder.OrderDetails));
         console.log('Products:', products);
         console.log('ProductVendors:', productVendors);
+        console.log('Existing Details:', existingDetails);
 
         function addOrderDetailRow() {
             const rowCount = $('#orderDetailsBody tr').length;
@@ -237,11 +266,13 @@
         }
 
         $(document).ready(function() {
-            // Removed DataTable initialization to fix form submission issues
-            if ($('#PurchaseOrder_VendorId').val()) {
-                updateProductDropdown($('#PurchaseOrder_VendorId')[0]);
-            }
-            addOrderDetailRow(); // Add initial row and update total
+            updateProductDropdown($('#PurchaseOrder_VendorId')[0]);
+            existingDetails.forEach((detail, index) => {
+                const $row = $('#orderDetailsBody tr').eq(index);
+                $row.find('.product-select').val(detail.productId);
+                updateUnitPrice($row.find('.product-select')[0]);
+            });
+            updateTotalAmount();
         });
     </script>
 }
