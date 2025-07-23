@@ -8,7 +8,7 @@ namespace Application.Validators
         {
             When(a => a != null, () =>
             {
-                RuleFor(a => a!.Street)
+                RuleFor(a => a!.Line1)
                     .NotEmpty().WithMessage("Street is required.")
                     .MaximumLength(100).WithMessage("Street cannot exceed 100 characters.");
 

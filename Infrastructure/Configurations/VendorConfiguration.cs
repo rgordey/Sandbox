@@ -16,7 +16,7 @@ namespace Infrastructure.Configurations
             // Define Address as an owned type
             builder.OwnsOne(v => v.Address, a =>
             {
-                a.Property(p => p.Street).HasMaxLength(200).HasColumnName("Address_Street");
+                a.Property(p => p.Line1).HasMaxLength(200).HasColumnName("Address_Street");
                 a.Property(p => p.City).HasMaxLength(100).HasColumnName("Address_City");
                 a.Property(p => p.State).HasMaxLength(50).HasColumnName("Address_State");
                 a.Property(p => p.ZipCode).HasMaxLength(20).HasColumnName("Address_ZipCode");

@@ -21,7 +21,7 @@ namespace Infrastructure.CompiledModels
                 typeof(Address),
                 baseEntityType,
                 sharedClrType: true,
-                propertyCount: 5,
+                propertyCount: 7,
                 foreignKeyCount: 1,
                 keyCount: 1);
 
@@ -41,6 +41,30 @@ namespace Infrastructure.CompiledModels
             city.AddAnnotation("Relational:ColumnName", "ShippingCity");
             city.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
+            var country = runtimeEntityType.AddProperty(
+                "Country",
+                typeof(string),
+                propertyInfo: typeof(Address).GetProperty("Country", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Address).GetField("<Country>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            country.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var line1 = runtimeEntityType.AddProperty(
+                "Line1",
+                typeof(string),
+                propertyInfo: typeof(Address).GetProperty("Line1", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Address).GetField("<Line1>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                maxLength: 100);
+            line1.AddAnnotation("Relational:ColumnName", "ShippingStreet");
+            line1.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var line2 = runtimeEntityType.AddProperty(
+                "Line2",
+                typeof(string),
+                propertyInfo: typeof(Address).GetProperty("Line2", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Address).GetField("<Line2>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                nullable: true);
+            line2.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
             var state = runtimeEntityType.AddProperty(
                 "State",
                 typeof(string),
@@ -49,15 +73,6 @@ namespace Infrastructure.CompiledModels
                 maxLength: 50);
             state.AddAnnotation("Relational:ColumnName", "ShippingState");
             state.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
-
-            var street = runtimeEntityType.AddProperty(
-                "Street",
-                typeof(string),
-                propertyInfo: typeof(Address).GetProperty("Street", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                fieldInfo: typeof(Address).GetField("<Street>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                maxLength: 100);
-            street.AddAnnotation("Relational:ColumnName", "ShippingStreet");
-            street.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var zipCode = runtimeEntityType.AddProperty(
                 "ZipCode",

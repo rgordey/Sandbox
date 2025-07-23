@@ -31,10 +31,25 @@
 
             <h4><i class="fas fa-map-marker-alt me-1"></i>Mailing Address</h4>
             <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Search Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input id="mailingAutocomplete" class="form-control" placeholder="Enter address" />
+                    </div>
+                    <div id="mailingLoadError" class="text-danger mt-2" style="display:none;">Failed to load Mailing Address autocomplete. Check console for details.</div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6 form-group mb-3">
-                    <label asp-for="Command.MailingAddress.Street" class="control-label"><i class="fas fa-road me-1"></i>Street</label>
-                    <input asp-for="Command.MailingAddress.Street" class="form-control" />
-                    <span asp-validation-for="Command.MailingAddress.Street" class="text-danger"></span>
+                    <label asp-for="Command.MailingAddress.Line1" class="control-label"><i class="fas fa-road me-1"></i>Line 1</label>
+                    <input asp-for="Command.MailingAddress.Line1" class="form-control" />
+                    <span asp-validation-for="Command.MailingAddress.Line1" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label asp-for="Command.MailingAddress.Line2" class="control-label"><i class="fas fa-road me-1"></i>Line 2</label>
+                    <input asp-for="Command.MailingAddress.Line2" class="form-control" />
+                    <span asp-validation-for="Command.MailingAddress.Line2" class="text-danger"></span>
                 </div>
                 <div class="col-md-6 form-group mb-3">
                     <label asp-for="Command.MailingAddress.City" class="control-label"><i class="fas fa-city me-1"></i>City</label>
@@ -53,15 +68,35 @@
                     <input asp-for="Command.MailingAddress.ZipCode" class="form-control" />
                     <span asp-validation-for="Command.MailingAddress.ZipCode" class="text-danger"></span>
                 </div>
-                
+                <div class="col-md-4 form-group mb-3">
+                    <label asp-for="Command.MailingAddress.Country" class="control-label"><i class="fas fa-mail-bulk me-1"></i>Country</label>
+                    <input asp-for="Command.MailingAddress.Country" class="form-control" />
+                    <span asp-validation-for="Command.MailingAddress.Country" class="text-danger"></span>
+                </div>
+
             </div>
 
             <h4><i class="fas fa-map-marker-alt me-1"></i>Shipping Address</h4>
             <div class="row">
+                <div class="col-md-12 mb-3">
+                    <label class="form-label">Search Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input id="shippingAutocomplete" class="form-control" placeholder="Enter address" />
+                    </div>
+                    <div id="shippingLoadError" class="text-danger mt-2" style="display:none;">Failed to load Shipping Address autocomplete. Check console for details.</div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-md-6 form-group mb-3">
-                    <label asp-for="Command.ShippingAddress.Street" class="control-label"><i class="fas fa-road me-1"></i>Street</label>
-                    <input asp-for="Command.ShippingAddress.Street" class="form-control" />
-                    <span asp-validation-for="Command.ShippingAddress.Street" class="text-danger"></span>
+                    <label asp-for="Command.ShippingAddress.Line1" class="control-label"><i class="fas fa-road me-1"></i>Line 1</label>
+                    <input asp-for="Command.ShippingAddress.Line1" class="form-control" />
+                    <span asp-validation-for="Command.ShippingAddress.Line1" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label asp-for="Command.ShippingAddress.Line2" class="control-label"><i class="fas fa-road me-1"></i>Line 2</label>
+                    <input asp-for="Command.ShippingAddress.Line2" class="form-control" />
+                    <span asp-validation-for="Command.ShippingAddress.Line2" class="text-danger"></span>
                 </div>
                 <div class="col-md-6 form-group mb-3">
                     <label asp-for="Command.ShippingAddress.City" class="control-label"><i class="fas fa-city me-1"></i>City</label>
@@ -80,7 +115,12 @@
                     <input asp-for="Command.ShippingAddress.ZipCode" class="form-control" />
                     <span asp-validation-for="Command.ShippingAddress.ZipCode" class="text-danger"></span>
                 </div>
-                
+                <div class="col-md-4 form-group mb-3">
+                    <label asp-for="Command.ShippingAddress.Country" class="control-label"><i class="fas fa-mail-bulk me-1"></i>Country</label>
+                    <input asp-for="Command.ShippingAddress.Country" class="form-control" />
+                    <span asp-validation-for="Command.ShippingAddress.Country" class="text-danger"></span>
+                </div>
+
             </div>
 
             <div class="form-group">
@@ -98,4 +138,126 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        (function() {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+                console.error('Google Maps API failed to load. Check your network or ensure the script is included.');
+                document.getElementById('mailingLoadError').style.display = 'block';
+                document.getElementById('shippingLoadError').style.display = 'block';
+                return;
+            }
+
+            // For mailing
+            var mailingAutocomplete = new google.maps.places.Autocomplete(
+                document.getElementById('mailingAutocomplete'),
+                { types: ['address'] }
+            );
+            if (!mailingAutocomplete) {
+                console.error('Failed to initialize Mailing Autocomplete');
+                document.getElementById('mailingLoadError').style.display = 'block';
+                return;
+            }
+            mailingAutocomplete.setFields(['address_components', 'formatted_address']); // Explicitly request fields
+
+            mailingAutocomplete.addListener('place_changed', function() {
+                var place = mailingAutocomplete.getPlace();
+                console.log('Mailing Address Data:', place); // Debug the full place object
+                if (!place) {
+                    console.error('Mailing place is undefined');
+                    return;
+                }
+                if (!place.address_components) {
+                    console.error('Mailing address_components is undefined, using input value');
+                    var inputValue = document.getElementById('mailingAutocomplete').value;
+                    document.getElementById('Command_MailingAddress_Line1').value = inputValue.split(',')[0].trim() || '';
+                    return;
+                }
+
+                // Reset fields
+                document.getElementById('Command_MailingAddress_Line1').value = '';
+                document.getElementById('Command_MailingAddress_Line2').value = '';
+                document.getElementById('Command_MailingAddress_City').value = '';
+                document.getElementById('Command_MailingAddress_State').value = '';
+                document.getElementById('Command_MailingAddress_ZipCode').value = '';
+                document.getElementById('Command_MailingAddress_Country').value = '';
+
+                // Parse address components
+                let streetAddress = '';
+                place.address_components.forEach(component => {
+                    console.log('Mailing Component:', component.types, component.long_name); // Debug each component
+                    if (component.types.includes('street_number') || component.types.includes('route')) {
+                        streetAddress += (component.long_name || '') + ' ';
+                    } else if (component.types.includes('subpremise')) {
+                        document.getElementById('Command_MailingAddress_Line2').value = component.long_name || '';
+                    } else if (component.types.includes('locality') || component.types.includes('sublocality')) {
+                        document.getElementById('Command_MailingAddress_City').value = component.long_name || '';
+                    } else if (component.types.includes('administrative_area_level_1')) {
+                        document.getElementById('Command_MailingAddress_State').value = component.short_name || '';
+                    } else if (component.types.includes('postal_code')) {
+                        document.getElementById('Command_MailingAddress_ZipCode').value = component.long_name || '';
+                    } else if (component.types.includes('country')) {
+                        document.getElementById('Command_MailingAddress_Country').value = component.long_name || '';
+                    }
+                });
+
+                document.getElementById('Command_MailingAddress_Line1').value = streetAddress.trim() || (place.formatted_address ? place.formatted_address.split(',')[0].trim() : '');
+            });
+
+            // For shipping
+            var shippingAutocomplete = new google.maps.places.Autocomplete(
+                document.getElementById('shippingAutocomplete'),
+                { types: ['address'] }
+            );
+            if (!shippingAutocomplete) {
+                console.error('Failed to initialize Shipping Autocomplete');
+                document.getElementById('shippingLoadError').style.display = 'block';
+                return;
+            }
+            shippingAutocomplete.setFields(['address_components', 'formatted_address']); // Explicitly request fields
+
+            shippingAutocomplete.addListener('place_changed', function() {
+                var place = shippingAutocomplete.getPlace();
+                console.log('Shipping Address Data:', place); // Debug the full place object
+                if (!place) {
+                    console.error('Shipping place is undefined');
+                    return;
+                }
+                if (!place.address_components) {
+                    console.error('Shipping address_components is undefined, using input value');
+                    var inputValue = document.getElementById('shippingAutocomplete').value;
+                    document.getElementById('Command_ShippingAddress_Line1').value = inputValue.split(',')[0].trim() || '';
+                    return;
+                }
+
+                // Reset fields
+                document.getElementById('Command_ShippingAddress_Line1').value = '';
+                document.getElementById('Command_ShippingAddress_Line2').value = '';
+                document.getElementById('Command_ShippingAddress_City').value = '';
+                document.getElementById('Command_ShippingAddress_State').value = '';
+                document.getElementById('Command_ShippingAddress_ZipCode').value = '';
+                document.getElementById('Command_ShippingAddress_Country').value = '';
+
+                // Parse address components
+                let streetAddress = '';
+                place.address_components.forEach(component => {
+                    console.log('Shipping Component:', component.types, component.long_name); // Debug each component
+                    if (component.types.includes('street_number') || component.types.includes('route')) {
+                        streetAddress += (component.long_name || '') + ' ';
+                    } else if (component.types.includes('subpremise')) {
+                        document.getElementById('Command_ShippingAddress_Line2').value = component.long_name || '';
+                    } else if (component.types.includes('locality') || component.types.includes('sublocality')) {
+                        document.getElementById('Command_ShippingAddress_City').value = component.long_name || '';
+                    } else if (component.types.includes('administrative_area_level_1')) {
+                        document.getElementById('Command_ShippingAddress_State').value = component.short_name || '';
+                    } else if (component.types.includes('postal_code')) {
+                        document.getElementById('Command_ShippingAddress_ZipCode').value = component.long_name || '';
+                    } else if (component.types.includes('country')) {
+                        document.getElementById('Command_ShippingAddress_Country').value = component.long_name || '';
+                    }
+                });
+
+                document.getElementById('Command_ShippingAddress_Line1').value = streetAddress.trim() || (place.formatted_address ? place.formatted_address.split(',')[0].trim() : '');
+            });
+        })();
+    </script>
 }

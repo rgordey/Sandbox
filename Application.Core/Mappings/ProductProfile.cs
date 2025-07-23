@@ -23,7 +23,7 @@ namespace Application.Mappings
                     ContactEmail = pv.Vendor.ContactEmail,
                     Address = new AddressDto
                     {
-                        Street = pv.Vendor.Address.Street,
+                        Line1 = pv.Vendor.Address.Line1,
                         City = pv.Vendor.Address.City,
                         State = pv.Vendor.Address.State,
                         ZipCode = pv.Vendor.Address.ZipCode
