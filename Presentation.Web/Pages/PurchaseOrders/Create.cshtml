@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Create Purchase Order";
     var lastUpdated = DateTime.Now.ToString("MMMM dd, yyyy hh:mm tt CDT"); // e.g., "July 22, 2025 05:54 AM CDT"
+    var today = DateTime.Now.ToString("yyyy-MM-dd");
 }
 
 <div class="container py-4">
@@ -30,7 +31,7 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label asp-for="PurchaseOrder.OrderDate" class="form-label">Order Date</label>
-                        <input asp-for="PurchaseOrder.OrderDate" class="form-control" type="date" />
+                        <input asp-for="PurchaseOrder.OrderDate" class="form-control" type="date" value="@today"/>
                         <span asp-validation-for="PurchaseOrder.OrderDate" class="text-danger"></span>
                     </div>
                     <div class="col-md-6 mb-3">
