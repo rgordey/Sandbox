@@ -11,7 +11,7 @@ namespace Presentation.Web.Pages.Customers
 {
     public class DeleteModel(IMediator mediator) : PageModel
     {
-        public CustomerDto Customer { get; set; } = default!;
+        public CustomerMetaDto Customer { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -20,7 +20,7 @@ namespace Presentation.Web.Pages.Customers
                 return NotFound();
             }
 
-            var customer = await mediator.Send(new GetCustomerQuery() { CustomerId = id });
+            var customer = await mediator.Send(new GetCustomerMetaQuery() { CustomerId = id });
             if (customer == null)
             {
                 return NotFound();
@@ -41,7 +41,7 @@ namespace Presentation.Web.Pages.Customers
                 {
                     ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
-                Customer = await mediator.Send(new GetCustomerQuery() { CustomerId = id });
+                Customer = await mediator.Send(new GetCustomerMetaQuery() { CustomerId = id });
                 return Page();
             }
 

@@ -1,11 +1,9 @@
-﻿// Application/Features/Orders/Queries/GetOrdersDataTableQuery.cs
-using Application.Abstractions;
+﻿using Application.Abstractions;
 using Application.Common;
 using Application.Common.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Dynamic.Core;
 
 namespace Application.Features.Orders.Queries
 {
@@ -19,58 +17,48 @@ namespace Application.Features.Orders.Queries
         public string SearchValue { get; set; } = string.Empty;
     }
 
-    
-
     internal sealed class GetOrdersDataTableQueryHandler(IAppDbContext context, IMapper mapper) : IQueryHandler<GetOrdersDataTableQuery, DataTableResponse<SalesOrderDto>>
     {
         public async Task<DataTableResponse<SalesOrderDto>> Handle(GetOrdersDataTableQuery request, CancellationToken cancellationToken)
         {
             var query = context.Orders
-                .Include(o => o.Customer) // Ensure Customer is loaded for FullName projection
+                .Include(o => o.Customer) // Ensure Customer is loaded for Name/Email
                 .AsNoTracking()
                 .AsQueryable();
 
-            // Global search: Trim, lowercase, match on OrderDate, TotalAmount, or Customer FullName/Email
+            var totalRecords = await query.CountAsync(cancellationToken);
+
+            // Global search: Trim, lowercase, match on OrderDate, TotalAmount, or Customer Name/Email
             if (!string.IsNullOrWhiteSpace(request.SearchValue))
             {
                 var search = request.SearchValue.Trim().ToLower();
+                var collation = "SQL_Latin1_General_CP1_CI_AS";
                 query = query.Where(o =>
                     o.OrderDate.ToString("yyyy-MM-dd").ToLower().Contains(search) ||
                     o.TotalAmount.ToString().ToLower().Contains(search) ||
                     (o.Customer != null &&
-                     (EF.Functions.Collate((o.Customer.FirstName.Trim().ToLower() + " " + o.Customer.LastName.Trim()).ToLower(), "SQL_Latin1_General_CP1_CI_AS").Contains(search) ||
-                      EF.Functions.Collate(o.Customer.Email.ToLower(), "SQL_Latin1_General_CP1_CI_AS").Contains(search))));
+                     (EF.Functions.Collate(o.Customer.Name.Trim().ToLower(), collation).Contains(search) ||
+                      EF.Functions.Collate(o.Customer.Email.ToLower(), collation).Contains(search))));
             }
 
-            var totalRecords = await query.CountAsync(cancellationToken);
-            var filteredRecords = totalRecords;
+            var filteredRecords = await query.CountAsync(cancellationToken);
 
             // Sorting with mapping for custom columns
             if (!string.IsNullOrWhiteSpace(request.SortColumn))
             {
-                if (request.SortColumn.Equals("CustomerFullName", StringComparison.OrdinalIgnoreCase))
+                var isAsc = request.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase);
+                query = request.SortColumn.ToLowerInvariant() switch
                 {
-                    if (request.SortDirection == "asc")
-                    {
-                        query = query.OrderBy(o => o.Customer != null ? o.Customer.FirstName : "")
-                                     .ThenBy(o => o.Customer != null ? o.Customer.LastName : "");
-                    }
-                    else
-                    {
-                        query = query.OrderByDescending(o => o.Customer != null ? o.Customer.FirstName : "")
-                                     .ThenByDescending(o => o.Customer != null ? o.Customer.LastName : "");
-                    }
-                }
-                else
-                {
-                    // Handle other sortable fields (OrderDate, TotalAmount)
-                    query = query.OrderBy($"{request.SortColumn} {request.SortDirection}");
-                }
+                    "customerfullname" or "customer.name" => isAsc ? query.OrderBy(o => o.Customer.Name) : query.OrderByDescending(o => o.Customer.Name),
+                    "orderdate" => isAsc ? query.OrderBy(o => o.OrderDate) : query.OrderByDescending(o => o.OrderDate),
+                    "totalamount" => isAsc ? query.OrderBy(o => o.TotalAmount) : query.OrderByDescending(o => o.TotalAmount),
+                    _ => query.OrderBy(o => o.OrderDate)  // Default sort by OrderDate asc
+                };
             }
             else
             {
-                // Default sort by OrderDate if no column specified
-                query = query.OrderBy("OrderDate asc");
+                // Default sort by OrderDate asc
+                query = query.OrderBy(o => o.OrderDate);
             }
 
             // Paging and projection

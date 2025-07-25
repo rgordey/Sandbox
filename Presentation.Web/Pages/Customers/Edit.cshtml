@@ -15,27 +15,94 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
                 <input type="hidden" asp-for="Customer.Id" />
 
-                <!-- Personal Information Section -->
-                <h5 class="mb-3"><i class="fas fa-user me-2"></i>Personal Information</h5>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Customer.FullName" class="form-label">Full Name</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
-                            <input asp-for="Customer.FullName" class="form-control" />
-                        </div>
-                        <span asp-validation-for="Customer.FullName" class="text-danger"></span>
+                <div class="form-group mb-3">
+                    <label asp-for="Customer.CustomerType" class="control-label"><i class="fas fa-user-tag me-1"></i>Customer Type</label>
+                    <select asp-for="Customer.CustomerType" class="form-control" id="customerTypeSelect" disabled>
+                        <option value="Residential" selected="@(Model.Customer.CustomerType == "Residential")">Residential</option>
+                        <option value="Corporate" selected="@(Model.Customer.CustomerType == "Corporate")">Corporate</option>
+                        <option value="Government" selected="@(Model.Customer.CustomerType == "Government")">Government</option>
+                    </select>
+                    <span asp-validation-for="Customer.CustomerType" class="text-danger"></span>
+                </div>
+
+                <!-- Name Field (for non-Residential) -->
+                <div id="nameField" class="form-group mb-3" style="display: none;">
+                    <label asp-for="Customer.FullName" class="form-label">Name</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                        <input asp-for="Customer.FullName" class="form-control" />
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Customer.Email" class="form-label">Email</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                            <input asp-for="Customer.Email" class="form-control" />
-                        </div>
-                        <span asp-validation-for="Customer.Email" class="text-danger"></span>
+                    <span asp-validation-for="Customer.FullName" class="text-danger"></span>
+                </div>
+
+                <!-- Residential Fields -->
+                <div id="residentialFields" style="display: none;">
+                    <h4>Residential Details</h4>
+                    <div class="form-group mb-3">
+                        <label asp-for="Customer.FirstName" class="control-label"><i class="fas fa-user me-1"></i>First Name</label>
+                        <input asp-for="Customer.FirstName" class="form-control" />
+                        <span asp-validation-for="Customer.FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Customer.LastName" class="control-label"><i class="fas fa-user me-1"></i>Last Name</label>
+                        <input asp-for="Customer.LastName" class="form-control" />
+                        <span asp-validation-for="Customer.LastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input asp-for="Customer.IsSeniorDiscountEligible" class="form-check-input" type="checkbox" />
+                        <label asp-for="Customer.IsSeniorDiscountEligible" class="form-check-label">Senior Discount Eligible</label>
                     </div>
                 </div>
 
+                <!-- Corporate Fields -->
+                <div id="corporateFields" style="display: none;">
+                    <h4>Corporate Details</h4>
+                    <div class="form-group mb-3">
+                        <label asp-for="Customer.CompanyName" class="control-label"><i class="fas fa-building me-1"></i>Company Name</label>
+                        <input asp-for="Customer.CompanyName" class="form-control" />
+                        <span asp-validation-for="Customer.CompanyName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Customer.EmployeeCount" class="control-label"><i class="fas fa-users me-1"></i>Employee Count</label>
+                        <input asp-for="Customer.EmployeeCount" class="form-control" type="number" />
+                        <span asp-validation-for="Customer.EmployeeCount" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Customer.Industry" class="control-label"><i class="fas fa-industry me-1"></i>Industry</label>
+                        <input asp-for="Customer.Industry" class="form-control" />
+                        <span asp-validation-for="Customer.Industry" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Government Fields -->
+                <div id="governmentFields" style="display: none;">
+                    <h4>Government Details</h4>
+                    <div class="form-group mb-3">
+                        <label asp-for="Customer.AgencyName" class="control-label"><i class="fas fa-building me-1"></i>Agency Name</label>
+                        <input asp-for="Customer.AgencyName" class="form-control" />
+                        <span asp-validation-for="Customer.AgencyName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="Customer.Department" class="control-label"><i class="fas fa-sitemap me-1"></i>Department</label>
+                        <input asp-for="Customer.Department" class="form-control" />
+                        <span asp-validation-for="Customer.Department" class="text-danger"></span>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input asp-for="Customer.IsFederal" class="form-check-input" type="checkbox" />
+                        <label asp-for="Customer.IsFederal" class="form-check-label">Is Federal</label>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Customer.Email" class="control-label"><i class="fas fa-envelope me-1"></i>Email</label>
+                    <input asp-for="Customer.Email" class="form-control" />
+                    <span asp-validation-for="Customer.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Customer.PhoneNumber" class="control-label"><i class="fas fa-phone me-1"></i>Phone Number</label>
+                    <input asp-for="Customer.PhoneNumber" class="form-control" />
+                    <span asp-validation-for="Customer.PhoneNumber" class="text-danger"></span>
+                </div>
                 <!-- Mailing Address Section -->
                 <h5 class="mb-3"><i class="fas fa-mail-bulk me-2"></i>Mailing Address</h5>
                 <div class="row">
@@ -184,29 +251,31 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        (function() {
-            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-                console.error('Google Maps API failed to load. Check your network or ensure the script is included.');
+        function initAutocompletes() {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined' || typeof google.maps.places === 'undefined') {
+                console.error('Google Maps API or Places library failed to load. Check API key, Places API enabled, billing, or script URL.');
                 document.getElementById('mailingLoadError').style.display = 'block';
                 document.getElementById('shippingLoadError').style.display = 'block';
                 return;
             }
 
-            // For mailing
-            var mailingAutocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('mailingAutocomplete'),
-                { types: ['address'] }
-            );
-            if (!mailingAutocomplete) {
-                console.error('Failed to initialize Mailing Autocomplete');
+            // Mailing Autocomplete setup
+            var mailingAutocomplete;
+            try {
+                mailingAutocomplete = new google.maps.places.Autocomplete(
+                    document.getElementById('mailingAutocomplete'),
+                    { types: ['address'] }
+                );
+                mailingAutocomplete.setFields(['address_components', 'formatted_address']);
+            } catch (error) {
+                console.error('Failed to initialize Mailing Autocomplete:', error);
                 document.getElementById('mailingLoadError').style.display = 'block';
                 return;
             }
-            mailingAutocomplete.setFields(['address_components', 'formatted_address']); // Explicitly request fields
 
             mailingAutocomplete.addListener('place_changed', function() {
                 var place = mailingAutocomplete.getPlace();
-                console.log('Mailing Address Data:', place); // Debug the full place object
+                console.log('Mailing Address Data:', place);
                 if (!place) {
                     console.error('Mailing place is undefined');
                     return;
@@ -218,7 +287,6 @@
                     return;
                 }
 
-                // Reset fields
                 document.getElementById('Customer_MailingAddress_Line1').value = '';
                 document.getElementById('Customer_MailingAddress_Line2').value = '';
                 document.getElementById('Customer_MailingAddress_City').value = '';
@@ -226,10 +294,9 @@
                 document.getElementById('Customer_MailingAddress_ZipCode').value = '';
                 document.getElementById('Customer_MailingAddress_Country').value = '';
 
-                // Parse address components
                 let streetAddress = '';
                 place.address_components.forEach(component => {
-                    console.log('Mailing Component:', component.types, component.long_name); // Debug each component
+                    console.log('Mailing Component:', component.types, component.long_name);
                     if (component.types.includes('street_number') || component.types.includes('route')) {
                         streetAddress += (component.long_name || '') + ' ';
                     } else if (component.types.includes('subpremise')) {
@@ -248,21 +315,23 @@
                 document.getElementById('Customer_MailingAddress_Line1').value = streetAddress.trim() || (place.formatted_address ? place.formatted_address.split(',')[0].trim() : '');
             });
 
-            // For shipping
-            var shippingAutocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('shippingAutocomplete'),
-                { types: ['address'] }
-            );
-            if (!shippingAutocomplete) {
-                console.error('Failed to initialize Shipping Autocomplete');
+            // Shipping Autocomplete setup
+            var shippingAutocomplete;
+            try {
+                shippingAutocomplete = new google.maps.places.Autocomplete(
+                    document.getElementById('shippingAutocomplete'),
+                    { types: ['address'] }
+                );
+                shippingAutocomplete.setFields(['address_components', 'formatted_address']);
+            } catch (error) {
+                console.error('Failed to initialize Shipping Autocomplete:', error);
                 document.getElementById('shippingLoadError').style.display = 'block';
                 return;
             }
-            shippingAutocomplete.setFields(['address_components', 'formatted_address']); // Explicitly request fields
 
             shippingAutocomplete.addListener('place_changed', function() {
                 var place = shippingAutocomplete.getPlace();
-                console.log('Shipping Address Data:', place); // Debug the full place object
+                console.log('Shipping Address Data:', place);
                 if (!place) {
                     console.error('Shipping place is undefined');
                     return;
@@ -274,7 +343,6 @@
                     return;
                 }
 
-                // Reset fields
                 document.getElementById('Customer_ShippingAddress_Line1').value = '';
                 document.getElementById('Customer_ShippingAddress_Line2').value = '';
                 document.getElementById('Customer_ShippingAddress_City').value = '';
@@ -282,10 +350,9 @@
                 document.getElementById('Customer_ShippingAddress_ZipCode').value = '';
                 document.getElementById('Customer_ShippingAddress_Country').value = '';
 
-                // Parse address components
                 let streetAddress = '';
                 place.address_components.forEach(component => {
-                    console.log('Shipping Component:', component.types, component.long_name); // Debug each component
+                    console.log('Shipping Component:', component.types, component.long_name);
                     if (component.types.includes('street_number') || component.types.includes('route')) {
                         streetAddress += (component.long_name || '') + ' ';
                     } else if (component.types.includes('subpremise')) {
@@ -303,6 +370,27 @@
 
                 document.getElementById('Customer_ShippingAddress_Line1').value = streetAddress.trim() || (place.formatted_address ? place.formatted_address.split(',')[0].trim() : '');
             });
-        })();
+        }
+
+        function tryInitAutocompletes() {
+            if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+                initAutocompletes();
+            } else {
+                setTimeout(tryInitAutocompletes, 500);  // Retry every 500ms
+            }
+        }
+
+        window.addEventListener('load', tryInitAutocompletes);
+        tryInitAutocompletes();  // Start immediately
+
+        // Show fields based on CustomerType (disable select since type is not changeable)
+        document.addEventListener('DOMContentLoaded', function () {
+            var type = '@Model.Customer.CustomerType';
+            document.getElementById('customerTypeSelect').value = type;
+            document.getElementById('residentialFields').style.display = (type === 'Residential') ? 'block' : 'none';
+            document.getElementById('corporateFields').style.display = (type === 'Corporate') ? 'block' : 'none';
+            document.getElementById('governmentFields').style.display = (type === 'Government') ? 'block' : 'none';
+            document.getElementById('nameField').style.display = (type !== 'Residential') ? 'block' : 'none';
+        });
     </script>
 }

@@ -8,7 +8,7 @@ namespace Presentation.Web.Pages.Customers
 {
     public class IndexModel(ISender sender) : PageModel
     {
-        public List<CustomerDto> Customers { get; set; } = new List<CustomerDto>();
+        public List<CustomerListDto> Customers { get; set; } = new List<CustomerListDto>();
         public int RecordsTotal { get; set; }
 
         public async Task OnGetAsync()

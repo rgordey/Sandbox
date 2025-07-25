@@ -25,6 +25,7 @@
                     <tr>
                         <th scope="col">FullName</th>
                         <th scope="col">Email</th>
+                        <th scope="col">Type</th> <!-- Added for TPH to display customer type -->
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -55,12 +56,13 @@
                     },
                     error: function (xhr, error, thrown) {
                         console.error('DataTables Error: ' + thrown + ' - Status: ' + xhr.status + ' - Response: ' + xhr.responseText);
-                        $('#errorAlert').show();
+                        $('#errorAlert').text('Error: ' + (xhr.responseText || thrown)).show();
                     }
                 },
                 columns: [
                     { data: 'fullName', name: 'FullName', orderable: true, searchable: true },
                     { data: 'email', name: 'Email', orderable: true, searchable: true },
+                    { data: 'customerType', name: 'CustomerType', orderable: true, searchable: true, defaultContent: '' },
                     {
                         data: null,
                         orderable: false,

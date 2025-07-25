@@ -55,11 +55,7 @@ builder.Services.AddMediatR(cfg =>
 SelfLog.Enable(Console.Error);
 
 builder.Host.UseSerilog((context, loggerConfiguration) => loggerConfiguration
-    .ReadFrom.Configuration(context.Configuration)
-    .Enrich.FromLogContext()
-    .Enrich.WithMachineName()
-    .WriteTo.Console()
-    .WriteTo.Seq("http://localhost:5341"));
+    .ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 

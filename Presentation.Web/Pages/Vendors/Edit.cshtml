@@ -25,10 +25,25 @@
                     <span asp-validation-for="Command.ContactEmail" class="text-danger"></span>
                 </div>
                 <h4 class="mb-3">Address</h4>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label">Search Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input id="addressAutocomplete" class="form-control" placeholder="Enter address" />
+                        </div>
+                        <div id="addressLoadError" class="text-danger mt-2" style="display:none;">Failed to load Address autocomplete. Check console for details.</div>
+                    </div>
+                </div>
                 <div class="form-group mb-3">
                     <label asp-for="Command.Address.Line1" class="form-label"></label>
                     <input asp-for="Command.Address.Line1" class="form-control" />
                     <span asp-validation-for="Command.Address.Line1" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Address.Line2" class="form-label"></label>
+                    <input asp-for="Command.Address.Line2" class="form-control" />
+                    <span asp-validation-for="Command.Address.Line2" class="text-danger"></span>
                 </div>
                 <div class="form-group mb-3">
                     <label asp-for="Command.Address.City" class="form-label"></label>
@@ -45,7 +60,12 @@
                     <input asp-for="Command.Address.ZipCode" class="form-control" />
                     <span asp-validation-for="Command.Address.ZipCode" class="text-danger"></span>
                 </div>
-                
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Address.Country" class="form-label"></label>
+                    <input asp-for="Command.Address.Country" class="form-control" />
+                    <span asp-validation-for="Command.Address.Country" class="text-danger"></span>
+                </div>
+
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary me-2"><i class="fas fa-save me-1"></i>Save</button>
                     <a asp-page="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
@@ -57,4 +77,69 @@
 
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        (function() {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+                console.error('Google Maps API failed to load. Check your network or ensure the script is included.');
+                document.getElementById('addressLoadError').style.display = 'block';
+                return;
+            }
+
+            // For address
+            var addressAutocomplete = new google.maps.places.Autocomplete(
+                document.getElementById('addressAutocomplete'),
+                { types: ['address'] }
+            );
+            if (!addressAutocomplete) {
+                console.error('Failed to initialize Address Autocomplete');
+                document.getElementById('addressLoadError').style.display = 'block';
+                return;
+            }
+            addressAutocomplete.setFields(['address_components', 'formatted_address']);
+
+            addressAutocomplete.addListener('place_changed', function() {
+                var place = addressAutocomplete.getPlace();
+                console.log('Address Data:', place);
+                if (!place) {
+                    console.error('Address place is undefined');
+                    return;
+                }
+                if (!place.address_components) {
+                    console.error('Address address_components is undefined, using input value');
+                    var inputValue = document.getElementById('addressAutocomplete').value;
+                    document.getElementById('Command_Address_Line1').value = inputValue.split(',')[0].trim() || '';
+                    return;
+                }
+
+                // Reset fields
+                document.getElementById('Command_Address_Line1').value = '';
+                document.getElementById('Command_Address_Line2').value = '';
+                document.getElementById('Command_Address_City').value = '';
+                document.getElementById('Command_Address_State').value = '';
+                document.getElementById('Command_Address_ZipCode').value = '';
+                document.getElementById('Command_Address_Country').value = '';
+
+                // Parse address components
+                let streetAddress = '';
+                place.address_components.forEach(component => {
+                    console.log('Address Component:', component.types, component.long_name);
+                    if (component.types.includes('street_number') || component.types.includes('route')) {
+                        streetAddress += (component.long_name || '') + ' ';
+                    } else if (component.types.includes('subpremise')) {
+                        document.getElementById('Command_Address_Line2').value = component.long_name || '';
+                    } else if (component.types.includes('locality') || component.types.includes('sublocality')) {
+                        document.getElementById('Command_Address_City').value = component.long_name || '';
+                    } else if (component.types.includes('administrative_area_level_1')) {
+                        document.getElementById('Command_Address_State').value = component.short_name || '';
+                    } else if (component.types.includes('postal_code')) {
+                        document.getElementById('Command_Address_ZipCode').value = component.long_name || '';
+                    } else if (component.types.includes('country')) {
+                        document.getElementById('Command_Address_Country').value = component.long_name || '';
+                    }
+                });
+
+                document.getElementById('Command_Address_Line1').value = streetAddress.trim() || (place.formatted_address ? place.formatted_address.split(',')[0].trim() : '');
+            });
+        })();
+    </script>
 }

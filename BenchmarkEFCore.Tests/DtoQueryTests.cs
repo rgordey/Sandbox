@@ -1,3 +1,4 @@
+﻿
 ﻿using Application;
 using Application.Common.Behaviors;
 using Application.Common.Interfaces;
@@ -91,10 +92,11 @@ namespace Infrastructure.Tests
             var dtos = await _context.Customers
                 .Include(c => c.Orders)
                     .ThenInclude(o => o.OrderDetails)
+                        .ThenInclude(od => od.Product)  // Added for ProductName
                 .Select(c => new CustomerDto
                 {
                     Id = c.Id,
-                    FullName = c.FirstName + " " + c.LastName,
+                    FullName = c.Name,
                     Email = c.Email,
                     Orders = c.Orders.Select(o => new SalesOrderDto
                     {
@@ -105,14 +107,15 @@ namespace Infrastructure.Tests
                         {
                             Id = od.Id,
                             Quantity = od.Quantity,
-                            UnitPrice = od.UnitPrice
+                            UnitPrice = od.UnitPrice,
+                            ProductName = od.Product != null ? od.Product.Name : string.Empty  // Added for assertion
                         }).ToList()
                     }).ToList()
                 })
                 .Take(10) // Limit to first 10 for testing, adjust as needed
                 .ToListAsync();
 
-            
+
             using (new AssertionScope())
             {
                 dtos.Should().NotBeEmpty(); // Ensure data is returned
@@ -131,23 +134,29 @@ namespace Infrastructure.Tests
         {
             Console.WriteLine("Running EfCoreLinqQueryAsync test.");
             var dtos = await (from c in _context.Customers
-                              .Include(c => c.Orders)
-                                .ThenInclude(o => o.OrderDetails)
+                              join o in _context.Orders on c.Id equals o.CustomerId into orders
+                              from o in orders.DefaultIfEmpty()
+                              join od in _context.OrderDetails on o.Id equals od.OrderId into orderDetails
+                              from od in orderDetails.DefaultIfEmpty()
+                              join p in _context.Products on od.ProductId equals p.Id into products
+                              from p in products.DefaultIfEmpty()
+                              group new { o, od, p } by new { c.Id, c.Name, c.Email } into g
                               select new CustomerDto
                               {
-                                  Id = c.Id,
-                                  FullName = c.FirstName + " " + c.LastName,
-                                  Email = c.Email,
-                                  Orders = c.Orders.Select(o => new SalesOrderDto
+                                  Id = g.Key.Id,
+                                  FullName = g.Key.Name,
+                                  Email = g.Key.Email,
+                                  Orders = g.Where(x => x.o != null).GroupBy(x => x.o.Id).Select(og => new SalesOrderDto
                                   {
-                                      Id = o.Id,
-                                      OrderDate = o.OrderDate,
-                                      TotalAmount = o.TotalAmount,
-                                      OrderDetails = o.OrderDetails.Select(od => new SalesOrderDetailDto
+                                      Id = og.Key,
+                                      OrderDate = og.First().o.OrderDate,
+                                      TotalAmount = og.First().o.TotalAmount,
+                                      OrderDetails = og.Where(x => x.od != null).Select(x => new SalesOrderDetailDto
                                       {
-                                          Id = od.Id,
-                                          Quantity = od.Quantity,
-                                          UnitPrice = od.UnitPrice
+                                          Id = x.od.Id,
+                                          Quantity = x.od.Quantity,
+                                          UnitPrice = x.od.UnitPrice,
+                                          ProductName = x.p != null ? x.p.Name : string.Empty
                                       }).ToList()
                                   }).ToList()
                               })
@@ -186,13 +195,13 @@ namespace Infrastructure.Tests
                 customer1.Orders.Should().HaveCount(3); // 3 orders per customer in your seed
                 customer1.Orders[0].OrderDetails.Should().HaveCount(2); // 2 details per order  
                 customer1.Orders[0].OrderDetails[0].ProductName.Should().Be("Product1"); // Based on your seed data
-            }            
+            }
         }
 
         [Fact]
         public async Task UpdateCustomerCommand_InvalidCustomerId_ThrowsValidationException()
         {
-            var act = () => _mediator.Send(new UpdateCustomerCommand() { Customer = new CustomerDto() { Id = Guid.Empty } });
+            var act = () => _mediator.Send(new UpdateCustomerCommand() { Customer = new CustomerMetaDto() { Id = Guid.Empty } });
 
             await act.Should().ThrowAsync<Exception>()
                 .WithMessage("Customer not found with Id of 00000000-0000-0000-0000-000000000000");

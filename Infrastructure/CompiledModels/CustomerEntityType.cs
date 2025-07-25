@@ -4,6 +4,7 @@ using System.Reflection;
 using Domain;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 #pragma warning disable 219, 612, 618
 #nullable disable
@@ -19,7 +20,10 @@ namespace Infrastructure.CompiledModels
                 "Domain.Customer",
                 typeof(Customer),
                 baseEntityType,
-                propertyCount: 4,
+                discriminatorProperty: "CustomerType",
+                discriminatorValue: "Customer",
+                derivedTypesCount: 3,
+                propertyCount: 6,
                 navigationCount: 3,
                 unnamedIndexCount: 1,
                 keyCount: 1);
@@ -34,6 +38,22 @@ namespace Infrastructure.CompiledModels
                 sentinel: new Guid("00000000-0000-0000-0000-000000000000"));
             id.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
+            var createdAt = runtimeEntityType.AddProperty(
+                "CreatedAt",
+                typeof(DateTime),
+                propertyInfo: typeof(Customer).GetProperty("CreatedAt", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Customer).GetField("<CreatedAt>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                sentinel: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+            createdAt.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var customerType = runtimeEntityType.AddProperty(
+                "CustomerType",
+                typeof(string),
+                afterSaveBehavior: PropertySaveBehavior.Throw,
+                maxLength: 13,
+                valueGeneratorFactory: new DiscriminatorValueGeneratorFactory().Create);
+            customerType.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
             var email = runtimeEntityType.AddProperty(
                 "Email",
                 typeof(string),
@@ -42,21 +62,21 @@ namespace Infrastructure.CompiledModels
                 maxLength: 100);
             email.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-            var firstName = runtimeEntityType.AddProperty(
-                "FirstName",
+            var name = runtimeEntityType.AddProperty(
+                "Name",
                 typeof(string),
-                propertyInfo: typeof(Customer).GetProperty("FirstName", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                fieldInfo: typeof(Customer).GetField("<FirstName>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                maxLength: 50);
-            firstName.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+                propertyInfo: typeof(Customer).GetProperty("Name", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Customer).GetField("<Name>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                maxLength: 100);
+            name.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
-            var lastName = runtimeEntityType.AddProperty(
-                "LastName",
+            var phoneNumber = runtimeEntityType.AddProperty(
+                "PhoneNumber",
                 typeof(string),
-                propertyInfo: typeof(Customer).GetProperty("LastName", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                fieldInfo: typeof(Customer).GetField("<LastName>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                propertyInfo: typeof(Customer).GetProperty("PhoneNumber", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Customer).GetField("<PhoneNumber>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 maxLength: 50);
-            lastName.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+            phoneNumber.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var key = runtimeEntityType.AddKey(
                 new[] { id });
@@ -73,6 +93,7 @@ namespace Infrastructure.CompiledModels
         public static void CreateAnnotations(RuntimeEntityType runtimeEntityType)
         {
             runtimeEntityType.AddAnnotation("Relational:FunctionName", null);
+            runtimeEntityType.AddAnnotation("Relational:MappingStrategy", "TPH");
             runtimeEntityType.AddAnnotation("Relational:Schema", null);
             runtimeEntityType.AddAnnotation("Relational:SqlQuery", null);
             runtimeEntityType.AddAnnotation("Relational:TableName", "Customers");

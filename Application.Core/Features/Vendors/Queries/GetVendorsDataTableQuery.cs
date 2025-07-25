@@ -36,10 +36,21 @@ namespace Application.Features.Vendors.Queries
             var totalRecords = await query.CountAsync(cancellationToken);
             var filteredRecords = totalRecords;
 
-            // Sorting with dynamic LINQ (supports nested like Address.Street)
+            // Sorting with dynamic LINQ (supports nested like Address.Line1)
             if (!string.IsNullOrWhiteSpace(request.SortColumn))
             {
-                var sortExpression = $"{request.SortColumn} {request.SortDirection}";
+                var sortColumn = request.SortColumn.ToLower() switch
+                {
+                    "name" => "Name",
+                    "contactemail" => "ContactEmail",
+                    "address.line1" => "Address.Line1",
+                    "address.city" => "Address.City",
+                    "address.state" => "Address.State",
+                    "address.zipcode" => "Address.ZipCode",
+                    _ => "Name"
+                };
+
+                var sortExpression = $"{sortColumn} {request.SortDirection}";
                 query = query.OrderBy(sortExpression);
             }
 

@@ -1,4 +1,4 @@
-﻿using Application;
+﻿﻿using Application;
 using Application.Mappings;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -49,12 +49,12 @@ namespace Presentation.Benchmark
             // Configure Mapster
             TypeAdapterConfig.GlobalSettings
                 .ForType<Customer, CustomerDto>()
-                .Map(dest => dest.FullName, src => src.FirstName + " " + src.LastName);
+                .Map(dest => dest.FullName, src => src.Name);
 
-            TypeAdapterConfig.GlobalSettings
-                .ForType<CustomerDto, Customer>()
-                .Map(dest => dest.FirstName, src => src.FullName.Split(new[] { ' ' }, 2)[0])
-                .Map(dest => dest.LastName, src => src.FullName.Split(new[] { ' ' }, 2)[1]);
+            // Remove or comment out reverse if not needed; updated to not assume First/Last
+            // TypeAdapterConfig.GlobalSettings
+            //     .ForType<CustomerDto, Customer>()
+            //     .Map(dest => dest.Name, src => src.FullName);  // For non-Residential; handle Residential separately if needed
 
             TypeAdapterConfig.GlobalSettings
                 .ForType<SalesOrder, SalesOrderDto>();
@@ -102,12 +102,10 @@ namespace Presentation.Benchmark
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             return await context.Customers
-                .Include(c => c.Orders)
-                    .ThenInclude(o => o.OrderDetails)
                 .Select(c => new CustomerDto
                 {
                     Id = c.Id,
-                    FullName = c.FirstName + " " + c.LastName,
+                    FullName = c.Name,
                     Email = c.Email,
                     Orders = c.Orders.Select(o => new SalesOrderDto
                     {
@@ -135,11 +133,11 @@ namespace Presentation.Benchmark
                           from o in orders.DefaultIfEmpty()
                           join od in context.OrderDetails on o.Id equals od.OrderId into orderDetails
                           from od in orderDetails.DefaultIfEmpty()
-                          group new { o, od } by new { c.Id, c.FirstName, c.LastName, c.Email } into g
+                          group new { o, od } by new { c.Id, c.Name, c.Email } into g
                           select new CustomerDto
                           {
                               Id = g.Key.Id,
-                              FullName = g.Key.FirstName + " " + g.Key.LastName,
+                              FullName = g.Key.Name,
                               Email = g.Key.Email,
                               Orders = g.Where(x => x.o != null).GroupBy(x => x.o.Id).Select(og => new SalesOrderDto
                               {

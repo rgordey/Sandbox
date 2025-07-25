@@ -1,8 +1,8 @@
-﻿using Application;
-using Application.Features.Orders.Commands;
+﻿using Application.Features.Orders.Commands;
 using Application.Features.PurchaseOrders.Commands;
 using AutoMapper;
 using Domain;
+
 
 namespace Application.Mappings
 {
@@ -20,7 +20,7 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Customer, opt => opt.Ignore());
 
             CreateMap<SalesOrder, SalesOrderDto>()
-                .ForMember(dest => dest.CustomerFullName, opt => opt.MapFrom(src => src.Customer != null ? src.Customer.FirstName + " " + src.Customer.LastName : string.Empty))
+                .ForMember(dest => dest.CustomerFullName, opt => opt.MapFrom(src => src.Customer != null ? src.Customer.Name : string.Empty))
                 .ReverseMap();
 
             CreateMap<SalesOrderDetail, SalesOrderDetailDto>()
@@ -30,14 +30,15 @@ namespace Application.Mappings
                 .ForMember(dest => dest.Order, opt => opt.Ignore());
 
             // Purchase Order mappings
-
             CreateMap<CreatePurchaseOrderCommand, PurchaseOrder>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore()) // Id is set manually in the handler
-                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails));
+                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails))
+                .ForMember(dest => dest.Vendor, opt => opt.Ignore());
 
             CreateMap<UpdatePurchaseOrderCommand, PurchaseOrder>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails));
+                .ForMember(dest => dest.OrderDetails, opt => opt.MapFrom(src => src.OrderDetails))
+                .ForMember(dest => dest.Vendor, opt => opt.Ignore());
 
             CreateMap<PurchaseOrder, PurchaseOrderDto>().ReverseMap();
 

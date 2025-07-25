@@ -19,7 +19,7 @@ namespace ApplicationTests
         {
             var command = new UpdateCustomerCommand
             {
-                Customer = new CustomerDto
+                Customer = new CustomerMetaDto
                 {
                     Id = Guid.NewGuid(),
                     FullName = "John Doe",
@@ -35,7 +35,7 @@ namespace ApplicationTests
         {
             var command = new UpdateCustomerCommand
             {
-                Customer = new CustomerDto
+                Customer = new CustomerMetaDto
                 {
                     Id = Guid.Empty,
                     FullName = "John Doe",

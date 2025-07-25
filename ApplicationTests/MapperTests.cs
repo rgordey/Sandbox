@@ -31,7 +31,7 @@ namespace ApplicationTests
         {
             var customerId = Guid.NewGuid();
             
-            var customer = new Customer
+            var customer = new ResidentialCustomer
             {
                 Id = customerId,
                 FirstName = "John",

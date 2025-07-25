@@ -10,10 +10,14 @@ namespace Infrastructure.Configurations
         {
             builder.ToTable("Customers");
             builder.HasKey(c => c.Id);
-            builder.Property(c => c.FirstName).IsRequired().HasMaxLength(50);
-            builder.Property(c => c.LastName).IsRequired().HasMaxLength(50);
-            builder.Property(c => c.Email).IsRequired().HasMaxLength(100);
 
+            // Common properties
+            builder.Property(c => c.Name).IsRequired().HasMaxLength(100);
+            builder.Property(c => c.Email).IsRequired().HasMaxLength(100);  // Assuming max length; adjust if needed
+            builder.Property(c => c.PhoneNumber).IsRequired().HasMaxLength(50);  // Assuming max length; adjust if needed
+            builder.Property(c => c.CreatedAt).IsRequired();
+
+            // Unique index on Email
             builder.HasIndex(c => c.Email)
                    .IsUnique()
                    .HasDatabaseName("IX_Customers_Email");
@@ -35,6 +39,12 @@ namespace Infrastructure.Configurations
                 sa.Property(a => a.State).HasColumnName("ShippingState").HasMaxLength(50);
                 sa.Property(a => a.ZipCode).HasColumnName("ShippingZipCode").HasMaxLength(20);
             });
+
+            // Relationship to Orders (assuming SalesOrder config elsewhere; configure if needed)
+            builder.HasMany(c => c.Orders)
+                   .WithOne(o => o.Customer)  // Assuming SalesOrder has Customer navigation
+                   .HasForeignKey(o => o.CustomerId)
+                   .OnDelete(DeleteBehavior.Cascade);  // Adjust cascade as needed
         }
     }
 }

@@ -83,15 +83,8 @@
         </div>
     </footer>
 
-    @{
-        var googleMapsApiKey = Environment.GetEnvironmentVariable("GoogleAPI");
-        if (string.IsNullOrEmpty(googleMapsApiKey))
-        {
-            throw new InvalidOperationException("GoogleAPI environment variable not set. Please configure a valid API key.");
-        }
-    }
-    <!-- Other head content -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&libraries=places"></script>
+    
+    
     <script src="~/lib/jquery/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/lib/datatables.net/dataTables.min.js" asp-append-version="true"></script>
@@ -99,5 +92,17 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+    @{
+        var googleMapsApiKey = Environment.GetEnvironmentVariable("GoogleAPI");
+        if (string.IsNullOrEmpty(googleMapsApiKey))
+        {
+            throw new InvalidOperationException("GoogleAPI environment variable not set. Please configure a valid API key.");
+        }
+    }
+    
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&libraries=places">
+    </script>
+    @* <script src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&libraries=places"></script> *@
 </body>
 </html>

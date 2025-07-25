@@ -11,7 +11,7 @@ namespace Infrastructure.CompiledModels
     public partial class AppDbContextModel
     {
         private AppDbContextModel()
-            : base(skipDetectChanges: false, modelId: new Guid("a8328822-9e94-40c2-bd15-3e056c3fbc1a"), entityTypeCount: 18)
+            : base(skipDetectChanges: false, modelId: new Guid("538a57d3-751f-4fb5-9b48-af51c3def8da"), entityTypeCount: 21)
         {
         }
 
@@ -35,6 +35,9 @@ namespace Infrastructure.CompiledModels
             var identityUserLogin = IdentityUserLoginEntityType.Create(this);
             var identityUserRole = IdentityUserRoleEntityType.Create(this);
             var identityUserToken = IdentityUserTokenEntityType.Create(this);
+            var corporateCustomer = CorporateCustomerEntityType.Create(this, customer);
+            var governmentCustomer = GovernmentCustomerEntityType.Create(this, customer);
+            var residentialCustomer = ResidentialCustomerEntityType.Create(this, customer);
 
             AddressEntityType.CreateForeignKey1(address, customer);
             Address0EntityType.CreateForeignKey1(address0, customer);
@@ -72,6 +75,9 @@ namespace Infrastructure.CompiledModels
             IdentityUserLoginEntityType.CreateAnnotations(identityUserLogin);
             IdentityUserRoleEntityType.CreateAnnotations(identityUserRole);
             IdentityUserTokenEntityType.CreateAnnotations(identityUserToken);
+            CorporateCustomerEntityType.CreateAnnotations(corporateCustomer);
+            GovernmentCustomerEntityType.CreateAnnotations(governmentCustomer);
+            ResidentialCustomerEntityType.CreateAnnotations(residentialCustomer);
 
             AddAnnotation("ProductVersion", "9.0.7");
             AddAnnotation("Relational:MaxIdentifierLength", 128);

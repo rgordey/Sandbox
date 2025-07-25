@@ -5,7 +5,6 @@
     ViewData["Title"] = "Create Customer";
 }
 
-
 <h1><i class="fas fa-user-plus me-2"></i>Create Customer</h1>
 
 <hr />
@@ -13,20 +12,92 @@
     <div class="col-md-8">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group mb-3">
-                <label asp-for="Command.FirstName" class="control-label"><i class="fas fa-user me-1"></i>First Name</label>
-                <input asp-for="Command.FirstName" class="form-control" />
-                <span asp-validation-for="Command.FirstName" class="text-danger"></span>
+                <label asp-for="Command.CustomerType" class="control-label"><i class="fas fa-user-tag me-1"></i>Customer Type</label>
+                <select asp-for="Command.CustomerType" class="form-control" id="customerTypeSelect">
+                    <option value="">Select Type</option>
+                    <option value="Residential">Residential</option>
+                    <option value="Corporate">Corporate</option>
+                    <option value="Government">Government</option>
+                </select>
+                <span asp-validation-for="Command.CustomerType" class="text-danger"></span>
             </div>
-            <div class="form-group mb-3">
-                <label asp-for="Command.LastName" class="control-label"><i class="fas fa-user me-1"></i>Last Name</label>
-                <input asp-for="Command.LastName" class="form-control" />
-                <span asp-validation-for="Command.LastName" class="text-danger"></span>
+
+            <!-- Name Field (for non-Residential) -->
+            <div id="nameField" class="form-group mb-3" style="display: none;">
+                <label asp-for="Command.Name" class="control-label"><i class="fas fa-user me-1"></i>Name</label>
+                <input asp-for="Command.Name" class="form-control" />
+                <span asp-validation-for="Command.Name" class="text-danger"></span>
             </div>
+
+            <!-- Residential Fields -->
+            <div id="residentialFields" style="display: none;">
+                <h4>Residential Details</h4>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.FirstName" class="control-label"><i class="fas fa-user me-1"></i>First Name</label>
+                    <input asp-for="Command.FirstName" class="form-control" />
+                    <span asp-validation-for="Command.FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.LastName" class="control-label"><i class="fas fa-user me-1"></i>Last Name</label>
+                    <input asp-for="Command.LastName" class="form-control" />
+                    <span asp-validation-for="Command.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-check mb-3">
+                    <input asp-for="Command.IsSeniorDiscountEligible" class="form-check-input" type="checkbox" />
+                    <label asp-for="Command.IsSeniorDiscountEligible" class="form-check-label">Senior Discount Eligible</label>
+                </div>
+            </div>
+
+            <!-- Corporate Fields -->
+            <div id="corporateFields" style="display: none;">
+                <h4>Corporate Details</h4>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.CompanyName" class="control-label"><i class="fas fa-building me-1"></i>Company Name</label>
+                    <input asp-for="Command.CompanyName" class="form-control" />
+                    <span asp-validation-for="Command.CompanyName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.EmployeeCount" class="control-label"><i class="fas fa-users me-1"></i>Employee Count</label>
+                    <input asp-for="Command.EmployeeCount" class="form-control" type="number" />
+                    <span asp-validation-for="Command.EmployeeCount" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Industry" class="control-label"><i class="fas fa-industry me-1"></i>Industry</label>
+                    <input asp-for="Command.Industry" class="form-control" />
+                    <span asp-validation-for="Command.Industry" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Government Fields -->
+            <div id="governmentFields" style="display: none;">
+                <h4>Government Details</h4>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.AgencyName" class="control-label"><i class="fas fa-building me-1"></i>Agency Name</label>
+                    <input asp-for="Command.AgencyName" class="form-control" />
+                    <span asp-validation-for="Command.AgencyName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label asp-for="Command.Department" class="control-label"><i class="fas fa-sitemap me-1"></i>Department</label>
+                    <input asp-for="Command.Department" class="form-control" />
+                    <span asp-validation-for="Command.Department" class="text-danger"></span>
+                </div>
+                <div class="form-check mb-3">
+                    <input asp-for="Command.IsFederal" class="form-check-input" type="checkbox" />
+                    <label asp-for="Command.IsFederal" class="form-check-label">Is Federal</label>
+                </div>
+            </div>
+
             <div class="form-group mb-3">
                 <label asp-for="Command.Email" class="control-label"><i class="fas fa-envelope me-1"></i>Email</label>
                 <input asp-for="Command.Email" class="form-control" />
                 <span asp-validation-for="Command.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="Command.PhoneNumber" class="control-label"><i class="fas fa-phone me-1"></i>Phone Number</label>
+                <input asp-for="Command.PhoneNumber" class="form-control" />
+                <span asp-validation-for="Command.PhoneNumber" class="text-danger"></span>
             </div>
 
             <h4><i class="fas fa-map-marker-alt me-1"></i>Mailing Address</h4>
@@ -73,7 +144,6 @@
                     <input asp-for="Command.MailingAddress.Country" class="form-control" />
                     <span asp-validation-for="Command.MailingAddress.Country" class="text-danger"></span>
                 </div>
-
             </div>
 
             <h4><i class="fas fa-map-marker-alt me-1"></i>Shipping Address</h4>
@@ -120,7 +190,6 @@
                     <input asp-for="Command.ShippingAddress.Country" class="form-control" />
                     <span asp-validation-for="Command.ShippingAddress.Country" class="text-danger"></span>
                 </div>
-
             </div>
 
             <div class="form-group">
@@ -139,29 +208,39 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        (function() {
-            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-                console.error('Google Maps API failed to load. Check your network or ensure the script is included.');
+        document.getElementById('customerTypeSelect').addEventListener('change', function () {
+            var type = this.value;
+            document.getElementById('residentialFields').style.display = (type === 'Residential') ? 'block' : 'none';
+            document.getElementById('corporateFields').style.display = (type === 'Corporate') ? 'block' : 'none';
+            document.getElementById('governmentFields').style.display = (type === 'Government') ? 'block' : 'none';
+            document.getElementById('nameField').style.display = (type !== 'Residential' && type !== '') ? 'block' : 'none';
+        });
+
+        function initAutocompletes() {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined' || typeof google.maps.places === 'undefined') {
+                console.error('Google Maps API or Places library failed to load. Check API key, Places API enabled, billing, or script URL.');
                 document.getElementById('mailingLoadError').style.display = 'block';
                 document.getElementById('shippingLoadError').style.display = 'block';
                 return;
             }
 
-            // For mailing
-            var mailingAutocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('mailingAutocomplete'),
-                { types: ['address'] }
-            );
-            if (!mailingAutocomplete) {
-                console.error('Failed to initialize Mailing Autocomplete');
+            // Mailing Autocomplete setup
+            var mailingAutocomplete;
+            try {
+                mailingAutocomplete = new google.maps.places.Autocomplete(
+                    document.getElementById('mailingAutocomplete'),
+                    { types: ['address'] }
+                );
+                mailingAutocomplete.setFields(['address_components', 'formatted_address']);
+            } catch (error) {
+                console.error('Failed to initialize Mailing Autocomplete:', error);
                 document.getElementById('mailingLoadError').style.display = 'block';
                 return;
             }
-            mailingAutocomplete.setFields(['address_components', 'formatted_address']); // Explicitly request fields
 
             mailingAutocomplete.addListener('place_changed', function() {
                 var place = mailingAutocomplete.getPlace();
-                console.log('Mailing Address Data:', place); // Debug the full place object
+                console.log('Mailing Address Data:', place);
                 if (!place) {
                     console.error('Mailing place is undefined');
                     return;
@@ -173,7 +252,6 @@
                     return;
                 }
 
-                // Reset fields
                 document.getElementById('Command_MailingAddress_Line1').value = '';
                 document.getElementById('Command_MailingAddress_Line2').value = '';
                 document.getElementById('Command_MailingAddress_City').value = '';
@@ -181,10 +259,9 @@
                 document.getElementById('Command_MailingAddress_ZipCode').value = '';
                 document.getElementById('Command_MailingAddress_Country').value = '';
 
-                // Parse address components
                 let streetAddress = '';
                 place.address_components.forEach(component => {
-                    console.log('Mailing Component:', component.types, component.long_name); // Debug each component
+                    console.log('Mailing Component:', component.types, component.long_name);
                     if (component.types.includes('street_number') || component.types.includes('route')) {
                         streetAddress += (component.long_name || '') + ' ';
                     } else if (component.types.includes('subpremise')) {
@@ -203,21 +280,23 @@
                 document.getElementById('Command_MailingAddress_Line1').value = streetAddress.trim() || (place.formatted_address ? place.formatted_address.split(',')[0].trim() : '');
             });
 
-            // For shipping
-            var shippingAutocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('shippingAutocomplete'),
-                { types: ['address'] }
-            );
-            if (!shippingAutocomplete) {
-                console.error('Failed to initialize Shipping Autocomplete');
+            // Shipping Autocomplete setup
+            var shippingAutocomplete;
+            try {
+                shippingAutocomplete = new google.maps.places.Autocomplete(
+                    document.getElementById('shippingAutocomplete'),
+                    { types: ['address'] }
+                );
+                shippingAutocomplete.setFields(['address_components', 'formatted_address']);
+            } catch (error) {
+                console.error('Failed to initialize Shipping Autocomplete:', error);
                 document.getElementById('shippingLoadError').style.display = 'block';
                 return;
             }
-            shippingAutocomplete.setFields(['address_components', 'formatted_address']); // Explicitly request fields
 
             shippingAutocomplete.addListener('place_changed', function() {
                 var place = shippingAutocomplete.getPlace();
-                console.log('Shipping Address Data:', place); // Debug the full place object
+                console.log('Shipping Address Data:', place);
                 if (!place) {
                     console.error('Shipping place is undefined');
                     return;
@@ -229,7 +308,6 @@
                     return;
                 }
 
-                // Reset fields
                 document.getElementById('Command_ShippingAddress_Line1').value = '';
                 document.getElementById('Command_ShippingAddress_Line2').value = '';
                 document.getElementById('Command_ShippingAddress_City').value = '';
@@ -237,10 +315,9 @@
                 document.getElementById('Command_ShippingAddress_ZipCode').value = '';
                 document.getElementById('Command_ShippingAddress_Country').value = '';
 
-                // Parse address components
                 let streetAddress = '';
                 place.address_components.forEach(component => {
-                    console.log('Shipping Component:', component.types, component.long_name); // Debug each component
+                    console.log('Shipping Component:', component.types, component.long_name);
                     if (component.types.includes('street_number') || component.types.includes('route')) {
                         streetAddress += (component.long_name || '') + ' ';
                     } else if (component.types.includes('subpremise')) {
@@ -258,6 +335,17 @@
 
                 document.getElementById('Command_ShippingAddress_Line1').value = streetAddress.trim() || (place.formatted_address ? place.formatted_address.split(',')[0].trim() : '');
             });
-        })();
+        }
+
+        function tryInitAutocompletes() {
+            if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+                initAutocompletes();
+            } else {
+                setTimeout(tryInitAutocompletes, 500); // Retry every 500ms
+            }
+        }
+
+        window.addEventListener('load', tryInitAutocompletes);
+        tryInitAutocompletes(); // Start immediately
     </script>
 }

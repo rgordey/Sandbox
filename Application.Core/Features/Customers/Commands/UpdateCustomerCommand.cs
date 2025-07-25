@@ -8,7 +8,7 @@ namespace Application.Features.Customers.Commands
 {
     public class UpdateCustomerCommand : ICommand<bool>
     {
-        public CustomerDto Customer { get; set; } = null!;
+        public CustomerMetaDto Customer { get; set; } = null!;
     }
 
     public class UpdateCustomerCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<UpdateCustomerCommand, bool>

@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Domain;
+using Infrastructure.Configurations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,18 @@ namespace Infrastructure
 
             // Apply configurations from the assembly
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+
+            modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+            modelBuilder.ApplyConfiguration(new ResidentialCustomerConfiguration());
+            modelBuilder.ApplyConfiguration(new CorporateCustomerConfiguration());
+            modelBuilder.ApplyConfiguration(new GovernmentCustomerConfiguration());
+
+            // If not already there, configure the discriminator for TPH
+            modelBuilder.Entity<Customer>()
+                .HasDiscriminator<string>("CustomerType")
+                .HasValue<ResidentialCustomer>("Residential")
+                .HasValue<CorporateCustomer>("Corporate")
+                .HasValue<GovernmentCustomer>("Government");
         }
     }    
 }
