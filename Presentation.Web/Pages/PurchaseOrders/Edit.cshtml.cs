@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.PurchaseOrders
 {
-    public class EditModel(IMediator mediator) : PageModel
+    public class EditModel(ISender mediator) : PageModel
     {
         [BindProperty]
         public UpdatePurchaseOrderCommand PurchaseOrder { get; set; } = new();

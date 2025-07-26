@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Abstractions;
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -9,9 +10,9 @@ namespace Application.Features.Vendors.Commands
         string Name,
         string ContactEmail,
         AddressDto Address
-    ) : IRequest<Guid>;
+    ) : ICommand<Guid>;
 
-    internal sealed class CreateVendorCommandHandler(IAppDbContext context, IMapper mapper) : IRequestHandler<CreateVendorCommand, Guid>
+    internal sealed class CreateVendorCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<CreateVendorCommand, Guid>
     {
         public async Task<Guid> Handle(CreateVendorCommand request, CancellationToken cancellationToken)
         {

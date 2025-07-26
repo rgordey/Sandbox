@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Abstractions;
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -9,9 +10,9 @@ namespace Application.Features.Products.Commands
         string Name,
         decimal BasePrice,
         List<ProductVendorDto> Vendors
-    ) : IRequest<Guid>;
+    ) : ICommand<Guid>;
 
-    internal sealed class CreateProductCommandHandler(IAppDbContext context, IMapper mapper) : IRequestHandler<CreateProductCommand, Guid>
+    internal sealed class CreateProductCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<CreateProductCommand, Guid>
     {
         public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
         {

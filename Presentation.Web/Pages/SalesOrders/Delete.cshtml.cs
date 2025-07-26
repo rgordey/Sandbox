@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.SalesOrders
 {
-    public class DeleteModel(IMediator mediator) : PageModel
+    public class DeleteModel(ISender mediator) : PageModel
     {
         public SalesOrderDto Order { get; set; } = default!;
 

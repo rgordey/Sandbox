@@ -23,7 +23,7 @@ namespace Infrastructure.Tests
         private readonly IServiceScope _scope;
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IMediator _mediator;
+        private readonly ISender _mediator;
 
         public DtoQueryTests()
         {
@@ -45,7 +45,7 @@ namespace Infrastructure.Tests
                 _scope = services.CreateScope();
                 _context = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 _mapper = _scope.ServiceProvider.GetRequiredService<IMapper>();
-                _mediator = _scope.ServiceProvider.GetRequiredService<IMediator>();
+                _mediator = _scope.ServiceProvider.GetRequiredService<ISender>();
                 Console.WriteLine("DtoQueryTests constructor completed successfully.");
             }
             catch (Exception ex)

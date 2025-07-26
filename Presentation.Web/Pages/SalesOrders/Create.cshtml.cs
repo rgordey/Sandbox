@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.SalesOrders
 {
-    public class CreateModel(IMediator mediator) : PageModel
+    public class CreateModel(ISender mediator) : PageModel
     {
         [BindProperty]
         public CreateOrderCommand Order { get; set; } = new() { OrderDetails = new() { new SalesOrderDetailDto() } };

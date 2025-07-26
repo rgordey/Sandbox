@@ -3,14 +3,13 @@ using Application.Abstractions;
 using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
-using MediatR;
 
 namespace Application.Features.Orders.Commands
 {
     public sealed class CreateOrderCommand : ICommand<Guid>
     {
         public Guid CustomerId { get; set; }
-        public DateTime OrderDate { get; set; }
+        public DateTime OrderDate { get; set; } = DateTime.Now;
         public decimal TotalAmount { get; set; }
         public List<SalesOrderDetailDto> OrderDetails { get; set; } = new();
     }

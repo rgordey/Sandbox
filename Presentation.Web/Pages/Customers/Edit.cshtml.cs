@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.Customers
 {
-    public class EditModel(IMediator mediator) : PageModel
+    public class EditModel(ISender mediator) : PageModel
     {
         [BindProperty]
         public CustomerMetaDto Customer { get; set; } = default!;

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.PurchaseOrders
 {
-    public class DeleteModel(IMediator mediator) : PageModel
+    public class DeleteModel(ISender mediator) : PageModel
     {
         public PurchaseOrderDto? PurchaseOrder { get; set; }
 

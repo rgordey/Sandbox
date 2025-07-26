@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Abstractions;
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -11,11 +12,11 @@ namespace Application.Features.Products.Commands
         string Name,
         decimal BasePrice,
         List<ProductVendorDto> Vendors
-    ) : IRequest;
+    ) : ICommand<Unit>;
 
-    internal sealed class UpdateProductCommandHandler(IAppDbContext context, IMapper mapper) : IRequestHandler<UpdateProductCommand>
+    internal sealed class UpdateProductCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<UpdateProductCommand, Unit>
     {
-        public async Task Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
         {
             var product = await context.Products.AsTracking().Include(p => p.ProductVendors).FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken)
                 ?? throw new KeyNotFoundException($"Product with ID {request.Id} not found.");
@@ -32,6 +33,7 @@ namespace Application.Features.Products.Commands
             }).ToList();
 
             await context.SaveChangesAsync(cancellationToken);
+            return Unit.Value;
         }
     }
 }

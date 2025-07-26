@@ -59,6 +59,36 @@ namespace Application.Mappings
                 // Optionally override CustomerType if needed, but base mapping handles it
                 .ForMember(dest => dest.CustomerType, opt => opt.MapFrom(src => "Government"));
 
+            CreateMap<CustomerMetaDto, Customer>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
+                .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
+                .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
+                // Ignore properties that shouldn't be updated or are auto-managed
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Orders, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+
+            CreateMap<CustomerMetaDto, ResidentialCustomer>()
+                .IncludeBase<CustomerMetaDto, Customer>()
+                // For Residential, set Name via FirstName/LastName setters
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForMember(dest => dest.LastName, opt => opt.MapFrom(src => src.LastName))
+                .ForMember(dest => dest.IsSeniorDiscountEligible, opt => opt.MapFrom(src => src.IsSeniorDiscountEligible));
+
+            CreateMap<CustomerMetaDto, CorporateCustomer>()
+                .IncludeBase<CustomerMetaDto, Customer>()
+                .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.CompanyName))
+                .ForMember(dest => dest.EmployeeCount, opt => opt.MapFrom(src => src.EmployeeCount))
+                .ForMember(dest => dest.Industry, opt => opt.MapFrom(src => src.Industry));
+
+            CreateMap<CustomerMetaDto, GovernmentCustomer>()
+                .IncludeBase<CustomerMetaDto, Customer>()
+                .ForMember(dest => dest.AgencyName, opt => opt.MapFrom(src => src.AgencyName))
+                .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department))
+                .ForMember(dest => dest.IsFederal, opt => opt.MapFrom(src => src.IsFederal));
+
             // Polymorphic mappings for derived types to DTO (if additional properties needed; extend DTO if required)
             CreateMap<ResidentialCustomer, CustomerDto>()
                 .IncludeBase<Customer, CustomerDto>()

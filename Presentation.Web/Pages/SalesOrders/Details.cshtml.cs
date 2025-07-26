@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.SalesOrders
 {
-    public class DetailsModel(IMediator mediator) : PageModel
+    public class DetailsModel(ISender mediator) : PageModel
     {
         public SalesOrderDto Order { get; set; } = default!;
 

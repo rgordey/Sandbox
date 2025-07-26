@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.Customers
 {
-    public class DetailsModel(IMediator mediator) : PageModel
+    public class DetailsModel(ISender mediator) : PageModel
     {
         public CustomerMetaDto Customer { get; set; } = default!;
 

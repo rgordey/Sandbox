@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Abstractions;
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using MediatR;
@@ -6,7 +7,7 @@ using MediatR;
 
 namespace Application.Features.Customers.Commands
 {
-    public sealed class CreateCustomerCommand : IRequest<CustomerDto>
+    public sealed class CreateCustomerCommand : ICommand<CustomerDto>
     {
         public string CustomerType { get; set; } = null!; // "Residential", "Corporate", "Government"
 
@@ -33,7 +34,7 @@ namespace Application.Features.Customers.Commands
         public bool IsFederal { get; set; }
     }
 
-    internal sealed class CreateCustomerCommandHandler(IAppDbContext context, IMapper mapper) : IRequestHandler<CreateCustomerCommand, CustomerDto>
+    internal sealed class CreateCustomerCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<CreateCustomerCommand, CustomerDto>
     {
         public async Task<CustomerDto> Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
         {
