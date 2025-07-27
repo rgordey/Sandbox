@@ -1,6 +1,7 @@
 ﻿@page
 @model Presentation.Web.Pages.Products.CreateModel
 @using Domain
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Create Product";
@@ -25,6 +26,15 @@
                         <label asp-for="Command.BasePrice" class="form-label fw-bold"><i class="fas fa-dollar-sign me-1"></i>Base Price</label>
                         <input asp-for="Command.BasePrice" class="form-control" type="number" step="0.01" />
                         <span asp-validation-for="Command.BasePrice" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Command.CategoryId" class="form-label fw-bold"><i class="fas fa-sitemap me-1"></i>Category</label>
+                        <select asp-for="Command.CategoryId" class="form-select" asp-items="@Model.Categories">
+                            <option value="">Select Category</option>
+                        </select>
+                        <span asp-validation-for="Command.CategoryId" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="row mb-3">

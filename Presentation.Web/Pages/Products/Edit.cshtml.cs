@@ -1,28 +1,32 @@
 using Application;
+using Application.Features.Categories.Queries;
 using Application.Features.Products.Commands;
 using Application.Features.Products.Queries;
 using Application.Features.Vendors.Queries;
 using Domain;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+
 
 namespace Presentation.Web.Pages.Products
 {
     public class EditModel(ISender sender) : PageModel
     {
-        private readonly ISender _sender = sender;
+        
 
         [BindProperty]
-        public UpdateProductCommand Command { get; set; } = new(Guid.Empty, string.Empty, 0, 0, WeightUnit.Kg, 0, 0, 0, DimensionUnit.Cm, new List<ProductVendorDto>());
+        public UpdateProductCommand Command { get; set; } = new(Guid.Empty, string.Empty, 0, 0, WeightUnit.Kg, 0, 0, 0, DimensionUnit.Cm, null, new List<ProductVendorDto>());
 
         public List<VendorDto> VendorList { get; set; } = new();
 
+        public List<SelectListItem> Categories { get; set; } = new();
+
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
-            var productDto = await _sender.Send(new GetProductQuery(id));
+            var productDto = await sender.Send(new GetProductByIdQuery(id));
             if (productDto == null)
             {
                 return NotFound();
@@ -38,6 +42,7 @@ namespace Presentation.Web.Pages.Products
                 productDto.Width,
                 productDto.Height,
                 productDto.DimensionUnit,
+                productDto.CategoryId,
                 productDto.Vendors.Select(v => new ProductVendorDto
                 {
                     VendorId = v.Id,
@@ -46,29 +51,47 @@ namespace Presentation.Web.Pages.Products
                 }).ToList()
             );
 
-            VendorList = await _sender.Send(new GetVendorsQuery());
+            VendorList = await sender.Send(new GetVendorsQuery());
+
+            var categories = await sender.Send(new GetCategoriesQuery());
+            Categories = GetCategorySelectList(categories, productDto.CategoryId).ToList();
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            try
+            if (!ModelState.IsValid)
             {
-                await _sender.Send(Command);
-            }
-            catch (ValidationException ex)
-            {
-                foreach (var error in ex.Errors) 
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-                VendorList = await _sender.Send(new GetVendorsQuery());
+                VendorList = await sender.Send(new GetVendorsQuery());
+                var categories = await sender.Send(new GetCategoriesQuery());
+                Categories = GetCategorySelectList(categories, Command.CategoryId).ToList();
                 return Page();
             }
 
-            
+            await sender.Send(Command);
             return RedirectToPage("Details", new { Command.Id });
+        }
+
+        private IEnumerable<SelectListItem> GetCategorySelectList(List<CategoryDto> categories, Guid? selectedId, Guid? parentId = null, string prefix = "")
+        {
+            var list = new List<SelectListItem>();
+
+            var childCategories = categories.Where(c => c.ParentId == parentId).OrderBy(c => c.Name);
+
+            foreach (var category in childCategories)
+            {
+                list.Add(new SelectListItem
+                {
+                    Value = category.Id.ToString(),
+                    Text = prefix + category.Name,
+                    Selected = category.Id == selectedId
+                });
+
+                list.AddRange(GetCategorySelectList(categories, selectedId, category.Id, prefix + "-- "));
+            }
+
+            return list;
         }
     }
 }

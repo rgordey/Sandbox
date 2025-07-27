@@ -1,6 +1,7 @@
 ﻿using Application.Features.Products.Commands;
 using FluentValidation;
 
+
 namespace Application.Validators
 {
     public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
@@ -16,6 +17,7 @@ namespace Application.Validators
             RuleFor(p => p.Width).GreaterThanOrEqualTo(0);
             RuleFor(p => p.Height).GreaterThanOrEqualTo(0);
             RuleFor(p => p.DimensionUnit).IsInEnum();
+            RuleFor(p => p.CategoryId).NotEmpty();  // Assuming category is required; remove if optional
             RuleForEach(p => p.Vendors).SetValidator(new ProductVendorDtoValidator());
         }
     }

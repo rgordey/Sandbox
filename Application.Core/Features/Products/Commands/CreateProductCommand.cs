@@ -3,7 +3,6 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 
-
 namespace Application.Features.Products.Commands
 {
     public sealed record CreateProductCommand(
@@ -15,6 +14,7 @@ namespace Application.Features.Products.Commands
         decimal Width,
         decimal Height,
         DimensionUnit DimensionUnit,
+        Guid? CategoryId,
         List<ProductVendorDto> Vendors
     ) : ICommand<Guid>;
 

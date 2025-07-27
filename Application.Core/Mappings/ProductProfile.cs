@@ -31,11 +31,26 @@ namespace Application.Mappings
                     VendorPrice = pv.VendorPrice,
                     StockQuantity = pv.StockQuantity
                 })))
-                .ForMember(dest => dest.RetailPrice, opt => opt.MapFrom(src => src.ProductVendors.Any() ? src.ProductVendors.Min(pv => pv.VendorPrice) * 2m : src.BasePrice));  // New: Standard 100% markup on min cost to get retail price
+                .ForMember(dest => dest.RetailPrice, opt => opt.MapFrom(src => src.ProductVendors.Any() ? src.ProductVendors.Min(pv => pv.VendorPrice) * 2m : src.BasePrice))
+                .ForMember(dest => dest.CategoryPath, opt => opt.MapFrom(src => GetCategoryPath(src.Category)));
 
             CreateMap<ProductVendor, ProductVendorDto>()
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))
                 .ForMember(dest => dest.VendorId, opt => opt.MapFrom(src => src.VendorId));
+        }
+
+        private static string GetCategoryPath(Category? category)
+        {
+            if (category == null) return string.Empty;
+
+            var path = new List<string> { category.Name };
+            var parent = category.Parent;
+            while (parent != null)
+            {
+                path.Insert(0, parent.Name);
+                parent = parent.Parent;
+            }
+            return string.Join(" > ", path);
         }
     }
 }

@@ -1,0 +1,43 @@
+﻿@page "{id:guid}"
+@model Presentation.Web.Pages.Categories.EditModel
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<div class="container py-4">
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="fas fa-edit me-2 fs-4"></i>
+            <h2 class="mb-0">Edit Category</h2>
+        </div>
+        <div class="card-body p-4">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert" if="ModelState.IsValid == false"></div>
+                <input type="hidden" asp-for="Command.Id" />
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Command.Name" class="form-label fw-bold"><i class="fas fa-tag me-1"></i>Name</label>
+                        <input asp-for="Command.Name" class="form-control" />
+                        <span asp-validation-for="Command.Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Command.ParentId" class="form-label fw-bold"><i class="fas fa-sitemap me-1"></i>Parent Category</label>
+                        <select asp-for="Command.ParentId" class="form-select">
+                            <option value="">None</option>
+                            @* Populate with categories from a query if needed *@
+                        </select>
+                        <span asp-validation-for="Command.ParentId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-primary me-2"><i class="fas fa-save me-1"></i>Save</button>
+                    <a asp-page="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

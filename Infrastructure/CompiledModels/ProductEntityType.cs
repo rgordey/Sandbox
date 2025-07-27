@@ -19,9 +19,10 @@ namespace Infrastructure.CompiledModels
                 "Domain.Product",
                 typeof(Product),
                 baseEntityType,
-                propertyCount: 9,
-                navigationCount: 1,
-                unnamedIndexCount: 1,
+                propertyCount: 10,
+                navigationCount: 2,
+                foreignKeyCount: 1,
+                unnamedIndexCount: 2,
                 keyCount: 1);
 
             var id = runtimeEntityType.AddProperty(
@@ -43,6 +44,14 @@ namespace Infrastructure.CompiledModels
                 scale: 2,
                 sentinel: 0m);
             basePrice.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var categoryId = runtimeEntityType.AddProperty(
+                "CategoryId",
+                typeof(Guid?),
+                propertyInfo: typeof(Product).GetProperty("CategoryId", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Product).GetField("<CategoryId>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                nullable: true);
+            categoryId.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var dimensionUnit = runtimeEntityType.AddProperty(
                 "DimensionUnit",
@@ -105,10 +114,29 @@ namespace Infrastructure.CompiledModels
             runtimeEntityType.SetPrimaryKey(key);
 
             var index = runtimeEntityType.AddIndex(
+                new[] { categoryId });
+
+            var index0 = runtimeEntityType.AddIndex(
                 new[] { name });
-            index.AddAnnotation("Relational:Name", "IX_Products_Name");
+            index0.AddAnnotation("Relational:Name", "IX_Products_Name");
 
             return runtimeEntityType;
+        }
+
+        public static RuntimeForeignKey CreateForeignKey1(RuntimeEntityType declaringEntityType, RuntimeEntityType principalEntityType)
+        {
+            var runtimeForeignKey = declaringEntityType.AddForeignKey(new[] { declaringEntityType.FindProperty("CategoryId") },
+                principalEntityType.FindKey(new[] { principalEntityType.FindProperty("Id") }),
+                principalEntityType);
+
+            var category = declaringEntityType.AddNavigation("Category",
+                runtimeForeignKey,
+                onDependent: true,
+                typeof(Category),
+                propertyInfo: typeof(Product).GetProperty("Category", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Product).GetField("<Category>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+
+            return runtimeForeignKey;
         }
 
         public static void CreateAnnotations(RuntimeEntityType runtimeEntityType)

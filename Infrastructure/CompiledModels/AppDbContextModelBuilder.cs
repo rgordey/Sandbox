@@ -12,7 +12,7 @@ namespace Infrastructure.CompiledModels
     public partial class AppDbContextModel
     {
         private AppDbContextModel()
-            : base(skipDetectChanges: false, modelId: new Guid("42d1dbd9-3fbe-41f5-8776-38fe58d91d9b"), entityTypeCount: 21)
+            : base(skipDetectChanges: false, modelId: new Guid("bc9e0840-ee50-478d-963e-c39938116020"), entityTypeCount: 22)
         {
         }
 
@@ -20,6 +20,7 @@ namespace Infrastructure.CompiledModels
         {
             var applicationRole = ApplicationRoleEntityType.Create(this);
             var applicationUser = ApplicationUserEntityType.Create(this);
+            var category = CategoryEntityType.Create(this);
             var customer = CustomerEntityType.Create(this);
             var address = AddressEntityType.Create(this);
             var address0 = Address0EntityType.Create(this);
@@ -40,8 +41,10 @@ namespace Infrastructure.CompiledModels
             var governmentCustomer = GovernmentCustomerEntityType.Create(this, customer);
             var residentialCustomer = ResidentialCustomerEntityType.Create(this, customer);
 
+            CategoryEntityType.CreateForeignKey1(category, category);
             AddressEntityType.CreateForeignKey1(address, customer);
             Address0EntityType.CreateForeignKey1(address0, customer);
+            ProductEntityType.CreateForeignKey1(product, category);
             ProductVendorEntityType.CreateForeignKey1(productVendor, product);
             ProductVendorEntityType.CreateForeignKey2(productVendor, vendor);
             PurchaseOrderEntityType.CreateForeignKey1(purchaseOrder, vendor);
@@ -60,6 +63,7 @@ namespace Infrastructure.CompiledModels
 
             ApplicationRoleEntityType.CreateAnnotations(applicationRole);
             ApplicationUserEntityType.CreateAnnotations(applicationUser);
+            CategoryEntityType.CreateAnnotations(category);
             CustomerEntityType.CreateAnnotations(customer);
             AddressEntityType.CreateAnnotations(address);
             Address0EntityType.CreateAnnotations(address0);

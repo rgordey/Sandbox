@@ -5,6 +5,7 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace Application.Features.Products.Commands
 {
     public sealed record UpdateProductCommand(
@@ -17,6 +18,7 @@ namespace Application.Features.Products.Commands
         decimal Width,
         decimal Height,
         DimensionUnit DimensionUnit,
+        Guid? CategoryId,
         List<ProductVendorDto> Vendors
     ) : ICommand<Unit>;
 

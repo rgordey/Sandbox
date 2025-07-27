@@ -15,6 +15,7 @@ namespace Application.Common.Interfaces
         DbSet<PurchaseOrder> PurchaseOrders { get; set; }
         DbSet<PurchaseOrderDetail> PurchaseOrderDetails { get; set; }
         DbSet<ProductVendor> ProductVendors { get; set; }
+        DbSet<Category> Categories { get; set; }
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }

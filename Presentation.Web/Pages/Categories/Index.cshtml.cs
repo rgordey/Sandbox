@@ -1,9 +1,10 @@
-using Application.Features.Products.Queries;
+﻿using Application.Features.Categories.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 
-namespace Presentation.Web.Pages.Products
+namespace Presentation.Web.Pages.Categories
 {
     public class IndexModel(ISender sender) : PageModel
     {
@@ -22,13 +23,11 @@ namespace Presentation.Web.Pages.Products
             sortColumn = sortColumn.ToLower() switch
             {
                 "name" => "Name",
-                "baseprice" => "BasePrice",
-                "retailprice" => "RetailPrice",
-                "categorypath" => "CategoryPath",
+                "parentname" => "ParentName",
                 _ => "Name"
             };
 
-            var query = new GetProductsDataTableQuery
+            var query = new GetCategoriesDataTableQuery
             {
                 Draw = draw,
                 Start = start,
@@ -40,7 +39,7 @@ namespace Presentation.Web.Pages.Products
 
             var response = await _sender.Send(query);
 
-            return new JsonResult(response);
+            return new JsonResult(response, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
         }
     }
 }

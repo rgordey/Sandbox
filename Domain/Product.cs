@@ -1,4 +1,6 @@
-﻿namespace Domain
+﻿using System.Reflection.Metadata;
+
+namespace Domain
 {
     public sealed class Product
     {
@@ -13,6 +15,11 @@
         public decimal Height { get; set; }
         public DimensionUnit DimensionUnit { get; set; } = DimensionUnit.Cm;
 
+        public Guid? CategoryId { get; set; }
+        public Category? Category { get; set; }
+
         public List<ProductVendor> ProductVendors { get; set; } = new();
     }
 }
+
+

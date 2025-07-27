@@ -1,4 +1,5 @@
 ﻿using Domain;
+using System.Reflection.Metadata;
 
 namespace Application
 {
@@ -14,6 +15,9 @@ namespace Application
         public decimal Width { get; set; }
         public decimal Height { get; set; }
         public DimensionUnit DimensionUnit { get; set; } = DimensionUnit.Cm;
+
+        public Guid? CategoryId { get; set; }
+        public string CategoryPath { get; set; } = null!;
         public List<VendorDto> Vendors { get; set; } = new(); // List of vendors supplying this product
     }
 }
