@@ -5,6 +5,7 @@ namespace Application
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
+        public string? VendorNumber { get; set; }
         public string ContactEmail { get; set; } = null!;
         public AddressDto Address { get; set; } = null!;
         public decimal VendorPrice { get; set; }  // Vendor-specific price for the product (cost price)

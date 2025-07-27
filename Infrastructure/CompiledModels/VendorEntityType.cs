@@ -19,7 +19,7 @@ namespace Infrastructure.CompiledModels
                 "Domain.Vendor",
                 typeof(Vendor),
                 baseEntityType,
-                propertyCount: 3,
+                propertyCount: 5,
                 navigationCount: 3,
                 unnamedIndexCount: 2,
                 keyCount: 1);
@@ -49,6 +49,30 @@ namespace Infrastructure.CompiledModels
                 fieldInfo: typeof(Vendor).GetField("<Name>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 maxLength: 200);
             name.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var sequentialNumber = runtimeEntityType.AddProperty(
+                "SequentialNumber",
+                typeof(int),
+                propertyInfo: typeof(Vendor).GetProperty("SequentialNumber", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Vendor).GetField("<SequentialNumber>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                valueGenerated: ValueGenerated.OnAdd,
+                sentinel: 0);
+            sequentialNumber.AddAnnotation("Relational:DefaultValueSql", "NEXT VALUE FOR VendorNumberSequence");
+            sequentialNumber.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var vendorNumber = runtimeEntityType.AddProperty(
+                "VendorNumber",
+                typeof(string),
+                propertyInfo: typeof(Vendor).GetProperty("VendorNumber", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Vendor).GetField("<VendorNumber>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                nullable: true,
+                valueGenerated: ValueGenerated.OnAddOrUpdate,
+                beforeSaveBehavior: PropertySaveBehavior.Ignore,
+                afterSaveBehavior: PropertySaveBehavior.Ignore,
+                maxLength: 8);
+            vendorNumber.AddAnnotation("Relational:ComputedColumnSql", "CONCAT('VEN', RIGHT('00000' + CAST([SequentialNumber] AS VARCHAR(5)), 5))");
+            vendorNumber.AddAnnotation("Relational:IsStored", true);
+            vendorNumber.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var key = runtimeEntityType.AddKey(
                 new[] { id });

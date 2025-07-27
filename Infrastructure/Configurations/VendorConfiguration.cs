@@ -14,6 +14,13 @@ namespace Infrastructure.Configurations
             builder.Property(v => v.Name).IsRequired().HasMaxLength(200);
             builder.Property(v => v.ContactEmail).HasMaxLength(100);
 
+            builder.Property(c => c.SequentialNumber)
+            .HasDefaultValueSql("NEXT VALUE FOR VendorNumberSequence");
+
+            builder.Property(c => c.VendorNumber)
+                .HasMaxLength(8)
+                .HasComputedColumnSql("CONCAT('VEN', RIGHT('00000' + CAST([SequentialNumber] AS VARCHAR(5)), 5))", stored: true);
+
             // Define Address as an owned type with all fields
             builder.OwnsOne(v => v.Address, a =>
             {

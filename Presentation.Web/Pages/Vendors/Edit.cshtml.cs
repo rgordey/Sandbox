@@ -12,7 +12,7 @@ namespace Presentation.Web.Pages.Vendors
         private readonly ISender _sender = sender;
 
         [BindProperty]
-        public UpdateVendorCommand Command { get; set; } = new UpdateVendorCommand(Guid.Empty, string.Empty, string.Empty, new AddressDto());
+        public UpdateVendorCommand Command { get; set; } = new UpdateVendorCommand(Guid.Empty, string.Empty, string.Empty, string.Empty, new AddressDto());
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -22,7 +22,7 @@ namespace Presentation.Web.Pages.Vendors
                 return NotFound();
             }
 
-            Command = new UpdateVendorCommand(id, vendorDto.Name, vendorDto.ContactEmail, vendorDto.Address);
+            Command = new UpdateVendorCommand(id, vendorDto.Name, vendorDto.ContactEmail, vendorDto.VendorNumber, vendorDto.Address);
             return Page();
         }
 

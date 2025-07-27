@@ -13,6 +13,7 @@ namespace Application.Features.Vendors.Commands
             Guid Id,
             string Name,
             string ContactEmail,
+            string VendorNumber,
             AddressDto Address
         ) : ICommand<Unit>;
 
