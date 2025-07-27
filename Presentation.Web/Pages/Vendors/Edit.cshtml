@@ -78,24 +78,26 @@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
-        (function() {
-            if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
-                console.error('Google Maps API failed to load. Check your network or ensure the script is included.');
+        function initAutocompletes() {
+            if (typeof google === 'undefined' || typeof google.maps === 'undefined' || typeof google.maps.places === 'undefined') {
+                console.error('Google Maps API or Places library failed to load. Check API key, Places API enabled, billing, or script URL.');
                 document.getElementById('addressLoadError').style.display = 'block';
                 return;
             }
 
-            // For address
-            var addressAutocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('addressAutocomplete'),
-                { types: ['address'] }
-            );
-            if (!addressAutocomplete) {
-                console.error('Failed to initialize Address Autocomplete');
+            // Address Autocomplete setup
+            var addressAutocomplete;
+            try {
+                addressAutocomplete = new google.maps.places.Autocomplete(
+                    document.getElementById('addressAutocomplete'),
+                    { types: ['address'] }
+                );
+                addressAutocomplete.setFields(['address_components', 'formatted_address']);
+            } catch (error) {
+                console.error('Failed to initialize Address Autocomplete:', error);
                 document.getElementById('addressLoadError').style.display = 'block';
                 return;
             }
-            addressAutocomplete.setFields(['address_components', 'formatted_address']);
 
             addressAutocomplete.addListener('place_changed', function() {
                 var place = addressAutocomplete.getPlace();
@@ -140,6 +142,17 @@
 
                 document.getElementById('Command_Address_Line1').value = streetAddress.trim() || (place.formatted_address ? place.formatted_address.split(',')[0].trim() : '');
             });
-        })();
+        }
+
+        function tryInitAutocompletes() {
+            if (typeof google !== 'undefined' && google.maps && google.maps.places) {
+                initAutocompletes();
+            } else {
+                setTimeout(tryInitAutocompletes, 500);  // Retry every 500ms
+            }
+        }
+
+        window.addEventListener('load', tryInitAutocompletes);
+        tryInitAutocompletes();  // Start immediately
     </script>
 }

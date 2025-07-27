@@ -49,7 +49,20 @@
                             <tr>
                                 <td>@vendor.Name</td>
                                 <td>@vendor.ContactEmail</td>
-                                <td>@vendor.Address.Line1, @vendor.Address.City, @vendor.Address.State @vendor.Address.ZipCode</td>
+                                <td>
+                                    @vendor.Address.Line1,
+                                    @if (!string.IsNullOrEmpty(vendor.Address.Line2))
+                                    {
+                                        @:@vendor.Address.Line2,
+                                    }
+                                    @vendor.Address.City,
+                                    @vendor.Address.State
+                                    @vendor.Address.ZipCode
+                                    @if (!string.IsNullOrEmpty(vendor.Address.Country))
+                                    {
+                                        <text>, @vendor.Address.Country</text>
+                                    }
+                                </td>
                                 <td>@vendor.VendorPrice.ToString("C")</td>
                                 <td>@vendor.StockQuantity</td>
                             </tr>

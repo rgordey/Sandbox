@@ -1,3 +1,4 @@
+// Presentation.Web/Pages/Products/Edit.cshtml.cs (updated)
 using Application;
 using Application.Features.Categories.Queries;
 using Application.Features.Products.Commands;
@@ -9,14 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-
-
 namespace Presentation.Web.Pages.Products
 {
     public class EditModel(ISender sender) : PageModel
     {
-        
-
         [BindProperty]
         public UpdateProductCommand Command { get; set; } = new(Guid.Empty, string.Empty, 0, 0, WeightUnit.Kg, 0, 0, 0, DimensionUnit.Cm, null, new List<ProductVendorDto>());
 
@@ -45,7 +42,7 @@ namespace Presentation.Web.Pages.Products
                 productDto.CategoryId,
                 productDto.Vendors.Select(v => new ProductVendorDto
                 {
-                    VendorId = v.Id,
+                    VendorId = v.Id,  // Changed from v.VendorId to v.Id
                     VendorPrice = v.VendorPrice,
                     StockQuantity = v.StockQuantity
                 }).ToList()

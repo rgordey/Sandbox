@@ -1,5 +1,6 @@
-﻿using Domain;
-using System.Reflection.Metadata;
+﻿// Application/ProductDto.cs (updated)
+using Domain;
+using System.Reflection.Metadata; // Remove if not needed
 
 namespace Application
 {
@@ -18,6 +19,6 @@ namespace Application
 
         public Guid? CategoryId { get; set; }
         public string CategoryPath { get; set; } = null!;
-        public List<VendorDto> Vendors { get; set; } = new(); // List of vendors supplying this product
+        public List<VendorDto> Vendors { get; set; } = new(); // Changed to List<VendorDto> to match mapping
     }
 }

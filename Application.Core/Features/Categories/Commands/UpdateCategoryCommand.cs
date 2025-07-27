@@ -22,12 +22,6 @@ namespace Application.Features.Categories.Commands
 
             mapper.Map(request, category);
 
-            // Prevent circular reference or self-parenting
-            if (request.ParentId == request.Id)
-            {
-                throw new ValidationException("A category cannot be its own parent.");
-            }
-
             await context.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }

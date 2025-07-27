@@ -24,3 +24,4 @@ namespace Application.Features.Categories.Commands
         }
     }
 }
+

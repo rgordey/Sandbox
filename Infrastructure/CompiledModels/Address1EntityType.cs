@@ -45,7 +45,11 @@ namespace Infrastructure.CompiledModels
                 "Country",
                 typeof(string),
                 propertyInfo: typeof(Address).GetProperty("Country", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                fieldInfo: typeof(Address).GetField("<Country>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+                fieldInfo: typeof(Address).GetField("<Country>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                valueGenerated: ValueGenerated.OnAdd,
+                maxLength: 50);
+            country.AddAnnotation("Relational:ColumnName", "Address_Country");
+            country.AddAnnotation("Relational:DefaultValue", "US");
             country.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var line1 = runtimeEntityType.AddProperty(
@@ -54,7 +58,7 @@ namespace Infrastructure.CompiledModels
                 propertyInfo: typeof(Address).GetProperty("Line1", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 fieldInfo: typeof(Address).GetField("<Line1>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 maxLength: 200);
-            line1.AddAnnotation("Relational:ColumnName", "Address_Street");
+            line1.AddAnnotation("Relational:ColumnName", "Address_Line1");
             line1.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var line2 = runtimeEntityType.AddProperty(
@@ -62,7 +66,9 @@ namespace Infrastructure.CompiledModels
                 typeof(string),
                 propertyInfo: typeof(Address).GetProperty("Line2", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 fieldInfo: typeof(Address).GetField("<Line2>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
-                nullable: true);
+                nullable: true,
+                maxLength: 200);
+            line2.AddAnnotation("Relational:ColumnName", "Address_Line2");
             line2.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var state = runtimeEntityType.AddProperty(

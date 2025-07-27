@@ -3,7 +3,6 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Application.Features.Products.Queries
 {
     public sealed record GetProductByIdQuery(Guid Id) : IQuery<ProductDto>;
@@ -14,7 +13,7 @@ namespace Application.Features.Products.Queries
         {
             var product = await context.Products
                 .Include(p => p.ProductVendors)
-                .ThenInclude(pv => pv.Vendor)
+                .ThenInclude(pv => pv.Vendor!)
                 .ThenInclude(v => v.Address)
                 .Include(p => p.Category)
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
