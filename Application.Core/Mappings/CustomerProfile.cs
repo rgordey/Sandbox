@@ -6,13 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Mappings
 {
-    public class CustomerProfile : Profile
+    public sealed class CustomerProfile : Profile
     {
         public CustomerProfile()
         {
             // Customer mappings (base to DTO)
             CreateMap<Customer, CustomerDto>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name))
+                .ForMember(dest => dest.SequentialNumber, opt => opt.MapFrom(src => src.SequentialNumber))
+                .ForMember(dest => dest.CustomerNumber, opt => opt.MapFrom(src => src.CustomerNumber))
                 .ForMember(dest => dest.CustomerType, opt => opt.Ignore())
                 .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
                 .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
@@ -20,6 +22,9 @@ namespace Application.Mappings
 
             CreateMap<Customer, CustomerMetaDto>()
                 .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name))
+                // SequentialNumber
+                .ForMember(dest => dest.SequentialNumber, opt => opt.MapFrom(src => src.SequentialNumber))
+                .ForMember(dest => dest.CustomerNumber, opt => opt.MapFrom(src => src.CustomerNumber))
                 .ForMember(dest => dest.CustomerType, opt => opt.MapFrom(src => EF.Property<string>(src, "CustomerType")))
                 .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
                 .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
@@ -61,6 +66,8 @@ namespace Application.Mappings
 
             CreateMap<CustomerMetaDto, Customer>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FullName))
+                .ForMember(dest => dest.SequentialNumber, opt => opt.MapFrom(src => src.SequentialNumber))
+                .ForMember(dest => dest.CustomerNumber, opt => opt.MapFrom(src => src.CustomerNumber))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.MailingAddress, opt => opt.MapFrom(src => src.MailingAddress))
@@ -104,6 +111,8 @@ namespace Application.Mappings
 
             // Command to Entity (assuming CreateCustomerCommand has all possible properties; map conditionally)
             CreateMap<CreateCustomerCommand, Customer>()
+                .ForMember(dest => dest.SequentialNumber, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerNumber, opt => opt.Ignore())
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.Orders, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())  // Auto-set in entity

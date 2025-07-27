@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Presentation.Web.Areas.Identity.Pages.Account
 {
-    public class LoginModel : PageModel
+    public sealed class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;

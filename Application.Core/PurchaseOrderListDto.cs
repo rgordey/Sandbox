@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application
 {
-    public class PurchaseOrderListDto
+    public sealed class PurchaseOrderListDto
     {
         public Guid Id { get; set; }
         public string VendorName { get; set; } = null!;

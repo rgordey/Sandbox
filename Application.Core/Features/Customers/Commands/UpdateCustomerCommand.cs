@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.Customers.Commands
 {
-    public class UpdateCustomerCommand : ICommand<bool>
+    public sealed class UpdateCustomerCommand : ICommand<bool>
     {
         public CustomerMetaDto Customer { get; set; } = null!;
     }
 
-    public class UpdateCustomerCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<UpdateCustomerCommand, bool>
+    public sealed class UpdateCustomerCommandHandler(IAppDbContext context, IMapper mapper) : ICommandHandler<UpdateCustomerCommand, bool>
     {
         public async Task<bool> Handle(UpdateCustomerCommand command, CancellationToken cancellationToken)
         {
@@ -24,7 +24,7 @@ namespace Application.Features.Customers.Commands
 
             mapper.Map(command.Customer, customer);
 
-            await context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);            
 
             return true;
         }

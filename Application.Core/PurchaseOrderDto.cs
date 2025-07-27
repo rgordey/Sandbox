@@ -1,7 +1,7 @@
 ﻿// Application/PurchaseOrderDto.cs
 namespace Application
 {
-    public class PurchaseOrderDto
+    public sealed class PurchaseOrderDto
     {
         public Guid Id { get; set; }
         public Guid VendorId { get; set; }

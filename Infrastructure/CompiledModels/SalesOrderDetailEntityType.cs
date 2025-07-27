@@ -21,7 +21,7 @@ namespace Infrastructure.CompiledModels
                 "Domain.SalesOrderDetail",
                 typeof(SalesOrderDetail),
                 baseEntityType,
-                propertyCount: 5,
+                propertyCount: 6,
                 navigationCount: 2,
                 foreignKeyCount: 2,
                 unnamedIndexCount: 2,
@@ -60,6 +60,15 @@ namespace Infrastructure.CompiledModels
                 fieldInfo: typeof(SalesOrderDetail).GetField("<Quantity>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 sentinel: 0);
             quantity.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var status = runtimeEntityType.AddProperty(
+                "Status",
+                typeof(SalesOrderDetailStatus),
+                propertyInfo: typeof(SalesOrderDetail).GetProperty("Status", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(SalesOrderDetail).GetField("<Status>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                providerPropertyType: typeof(string));
+            status.SetSentinelFromProviderValue("Pending");
+            status.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var unitPrice = runtimeEntityType.AddProperty(
                 "UnitPrice",

@@ -1,10 +1,12 @@
 ﻿namespace Application
 {
     // DTOs
-    public class CustomerMetaDto 
+    public sealed class CustomerMetaDto 
     {
         public Guid Id { get; set; }
         public string FullName { get; set; } = null!;
+        public string? CustomerNumber { get; set; }
+        public int SequentialNumber { get; set; }
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public string CustomerType { get; set; } = null!;

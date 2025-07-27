@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Application.Validators
 {
-    public class CreatePurchaseOrderCommandValidator : AbstractValidator<CreatePurchaseOrderCommand>
+    public sealed class CreatePurchaseOrderCommandValidator : AbstractValidator<CreatePurchaseOrderCommand>
     {
         public CreatePurchaseOrderCommandValidator()
         {
@@ -24,7 +24,7 @@ namespace Application.Validators
         }
     }
 
-    public class PurchaseOrderDetailDtoValidator : AbstractValidator<PurchaseOrderDetailDto>
+    public sealed class PurchaseOrderDetailDtoValidator : AbstractValidator<PurchaseOrderDetailDto>
     {
         public PurchaseOrderDetailDtoValidator()
         {

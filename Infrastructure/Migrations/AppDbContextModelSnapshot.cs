@@ -22,6 +22,16 @@ namespace Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.HasSequence<int>("CustomerNumberSequence");
+
+            modelBuilder.HasSequence<int>("ProductNumberSequence");
+
+            modelBuilder.HasSequence<int>("PurchaseOrderNumberSequence");
+
+            modelBuilder.HasSequence<int>("SalesOrderNumberSequence");
+
+            modelBuilder.HasSequence<int>("VendorNumberSequence");
+
             modelBuilder.Entity("Domain.ApplicationRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -136,6 +146,12 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("CustomerNumber")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)")
+                        .HasComputedColumnSql("CONCAT('CUS', RIGHT('00000' + CAST([SequentialNumber] AS VARCHAR(5)), 5))", true);
+
                     b.Property<string>("CustomerType")
                         .IsRequired()
                         .HasMaxLength(13)
@@ -155,6 +171,11 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("SequentialNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("NEXT VALUE FOR CustomerNumberSequence");
 
                     b.HasKey("Id");
 
@@ -179,10 +200,28 @@ namespace Infrastructure.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("DimensionUnit")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Height")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Length")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal>("Weight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("WeightUnit")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Width")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -279,6 +318,21 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("OrderNumber")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasMaxLength(8)
+                        .HasColumnType("nvarchar(8)")
+                        .HasComputedColumnSql("CONCAT('SO', RIGHT('000000' + CAST([SequentialNumber] AS VARCHAR(6)), 6))", true);
+
+                    b.Property<int>("SequentialNumber")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("NEXT VALUE FOR SalesOrderNumberSequence");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -305,6 +359,10 @@ namespace Infrastructure.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)

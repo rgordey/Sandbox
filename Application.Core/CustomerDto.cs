@@ -1,9 +1,11 @@
 ﻿namespace Application
 {
     // DTOs
-    public class CustomerDto
+    public sealed class CustomerDto
     {
         public Guid Id { get; set; }
+        public string? CustomerNumber { get; set; }
+        public int SequentialNumber { get; set; }
         public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
@@ -13,7 +15,7 @@
         public List<SalesOrderDto> Orders { get; set; } = new List<SalesOrderDto>();        
     }
 
-    public class CustomerListDto
+    public sealed class CustomerListDto
     {
         public Guid Id { get; set; }
         public string FullName { get; set; } = null!;

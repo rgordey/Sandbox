@@ -18,7 +18,7 @@ namespace Application.Features.Customers.Queries
             return await context.Customers
                 .Where(x => x.Id == request.CustomerId)
                 .ProjectTo<CustomerMetaDto>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+                .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

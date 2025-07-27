@@ -1,32 +1,74 @@
 ﻿@page "{id:guid}"
 @model Presentation.Web.Pages.Products.EditModel
+@using Domain
+@using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
     ViewData["Title"] = "Edit Product";
 }
 
 <div class="container py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white">
-            <h1 class="mb-0"><i class="fas fa-edit me-2"></i>Edit Product</h1>
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="fas fa-edit me-2 fs-4"></i>
+            <h2 class="mb-0">Edit Product</h2>
         </div>
         <div class="card-body p-4">
             <form method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert" if="ModelState.IsValid == false"></div>
                 <input type="hidden" asp-for="Command.Id" />
-                <div class="form-group mb-3">
-                    <label asp-for="Command.Name" class="form-label"></label>
-                    <input asp-for="Command.Name" class="form-control" />
-                    <span asp-validation-for="Command.Name" class="text-danger"></span>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Command.Name" class="form-label fw-bold"><i class="fas fa-tag me-1"></i>Name</label>
+                        <input asp-for="Command.Name" class="form-control" />
+                        <span asp-validation-for="Command.Name" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Command.BasePrice" class="form-label fw-bold"><i class="fas fa-dollar-sign me-1"></i>Base Price</label>
+                        <input asp-for="Command.BasePrice" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Command.BasePrice" class="text-danger"></span>
+                    </div>
                 </div>
-                <div class="form-group mb-3">
-                    <label asp-for="Command.BasePrice" class="form-label"></label>
-                    <input asp-for="Command.BasePrice" class="form-control" type="number" step="0.01" />
-                    <span asp-validation-for="Command.BasePrice" class="text-danger"></span>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Command.Weight" class="form-label fw-bold"><i class="fas fa-weight-hanging me-1"></i>Weight</label>
+                        <input asp-for="Command.Weight" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Command.Weight" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label asp-for="Command.WeightUnit" class="form-label fw-bold"><i class="fas fa-balance-scale me-1"></i>Weight Unit</label>
+                        <select asp-for="Command.WeightUnit" class="form-select" asp-items="Html.GetEnumSelectList<WeightUnit>()"></select>
+                        <span asp-validation-for="Command.WeightUnit" class="text-danger"></span>
+                    </div>
                 </div>
-                <h4 class="mb-3">Vendors</h4>
-                <table id="vendorsTable" class="table table-striped">
-                    <thead>
+                <h5 class="mb-3 fw-bold"><i class="fas fa-ruler-combined me-1"></i>Dimensions</h5>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label asp-for="Command.Length" class="form-label"><i class="fas fa-arrows-alt-h me-1"></i>Length</label>
+                        <input asp-for="Command.Length" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Command.Length" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Command.Width" class="form-label"><i class="fas fa-arrows-alt-h me-1"></i>Width</label>
+                        <input asp-for="Command.Width" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Command.Width" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="Command.Height" class="form-label"><i class="fas fa-arrows-alt-v me-1"></i>Height</label>
+                        <input asp-for="Command.Height" class="form-control" type="number" step="0.01" />
+                        <span asp-validation-for="Command.Height" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Command.DimensionUnit" class="form-label fw-bold"><i class="fas fa-ruler me-1"></i>Dimension Unit</label>
+                        <select asp-for="Command.DimensionUnit" class="form-select" asp-items="Html.GetEnumSelectList<DimensionUnit>()"></select>
+                        <span asp-validation-for="Command.DimensionUnit" class="text-danger"></span>
+                    </div>
+                </div>
+                <h5 class="mb-3 fw-bold"><i class="fas fa-users me-1"></i>Vendors</h5>
+                <table id="vendorsTable" class="table table-hover table-bordered">
+                    <thead class="table-light">
                         <tr>
                             <th>Vendor</th>
                             <th>Price</th>
@@ -43,26 +85,19 @@
                                         <option value="">Select Vendor</option>
                                         @foreach (var vendor in Model.VendorList)
                                         {
-                                            @if (Model.Command.Vendors[i].VendorId == vendor.Id)
-                                            {
-                                                <option value="@vendor.Id" selected>@vendor.Name</option>
-                                            }
-                                            else
-                                            {
-                                                <option value="@vendor.Id">@vendor.Name</option>
-                                            }
+                                            <option value="@vendor.Id" selected="@(Model.Command.Vendors[i].VendorId == vendor.Id)">@vendor.Name</option>
                                         }
                                     </select>
                                 </td>
                                 <td><input type="number" class="form-control price-input" name="Command.Vendors[@i].VendorPrice" step="0.01" value="@Model.Command.Vendors[i].VendorPrice" /></td>
                                 <td><input type="number" class="form-control stock-input" name="Command.Vendors[@i].StockQuantity" value="@Model.Command.Vendors[i].StockQuantity" /></td>
-                                <td><button type="button" class="btn btn-danger" onclick="removeVendorRow(this)">Remove</button></td>
+                                <td><button type="button" class="btn btn-outline-danger btn-sm" onclick="removeVendorRow(this)"><i class="fas fa-trash"></i></button></td>
                             </tr>
                         }
                     </tbody>
                 </table>
-                <button type="button" class="btn btn-secondary mb-3" onclick="addVendorRow()">Add Vendor</button>
-                <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-outline-secondary mb-3" onclick="addVendorRow()"><i class="fas fa-plus me-1"></i>Add Vendor</button>
+                <div class="d-flex justify-content-end mt-4">
                     <button type="submit" class="btn btn-primary me-2"><i class="fas fa-save me-1"></i>Save</button>
                     <a asp-page="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
                 </div>
@@ -74,8 +109,8 @@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
     <script>
-        var vendorList = @Html.Raw(Json.Serialize(Model.VendorList)); // Vendor list for dropdown
-        var rowCount = @Model.Command.Vendors.Count; // Initial row count
+        var vendorList = @Html.Raw(Json.Serialize(Model.VendorList));
+        var rowCount = @Model.Command.Vendors.Count;
 
         function addVendorRow() {
             var index = rowCount++;
@@ -86,7 +121,7 @@
                 </select></td>
                 <td><input type="number" class="form-control price-input" name="Command.Vendors[${index}].VendorPrice" step="0.01" /></td>
                 <td><input type="number" class="form-control stock-input" name="Command.Vendors[${index}].StockQuantity" /></td>
-                <td><button type="button" class="btn btn-danger" onclick="removeVendorRow(this)">Remove</button></td>
+                <td><button type="button" class="btn btn-outline-danger btn-sm" onclick="removeVendorRow(this)"><i class="fas fa-trash"></i></button></td>
             </tr>`;
             $('#vendorsTable tbody').append(row);
         }
@@ -107,7 +142,7 @@
         }
 
         $(document).ready(function () {
-            reindexVendorRows(); // Ensure initial rows are correctly indexed
+            reindexVendorRows();
         });
     </script>
 }

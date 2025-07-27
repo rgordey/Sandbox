@@ -2,13 +2,19 @@
 using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
-using MediatR;
+
 
 namespace Application.Features.Products.Commands
 {
     public sealed record CreateProductCommand(
         string Name,
         decimal BasePrice,
+        decimal Weight,
+        WeightUnit WeightUnit,
+        decimal Length,
+        decimal Width,
+        decimal Height,
+        DimensionUnit DimensionUnit,
         List<ProductVendorDto> Vendors
     ) : ICommand<Guid>;
 

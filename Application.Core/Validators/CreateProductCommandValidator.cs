@@ -9,6 +9,12 @@ namespace Application.Validators
         {
             RuleFor(p => p.Name).NotEmpty().MaximumLength(100);
             RuleFor(p => p.BasePrice).GreaterThanOrEqualTo(0);
+            RuleFor(p => p.Weight).GreaterThanOrEqualTo(0);
+            RuleFor(p => p.WeightUnit).IsInEnum();
+            RuleFor(p => p.Length).GreaterThanOrEqualTo(0);
+            RuleFor(p => p.Width).GreaterThanOrEqualTo(0);
+            RuleFor(p => p.Height).GreaterThanOrEqualTo(0);
+            RuleFor(p => p.DimensionUnit).IsInEnum();
             RuleForEach(p => p.Vendors).SetValidator(new ProductVendorDtoValidator());
         }
     }

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Validators
 {
-    public class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCommand>
+    public sealed class DeleteCustomerCommandValidator : AbstractValidator<DeleteCustomerCommand>
     {
         public DeleteCustomerCommandValidator()
         {

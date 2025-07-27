@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace Infrastructure
 {
-    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+    public sealed class ApplicationDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         public AppDbContext CreateDbContext(string[] args)
         {

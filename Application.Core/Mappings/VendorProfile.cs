@@ -5,7 +5,7 @@ using Domain;
 
 namespace Application.Mappings
 {
-    public class VendorProfile : Profile
+    public sealed class VendorProfile : Profile
     {
         public VendorProfile()
         {

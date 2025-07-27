@@ -123,7 +123,7 @@
                             <option value="">Select a product</option>
                             @foreach (var product in Model.Products)
                             {
-                                    <option value="@product.Id" data-price="@product.BasePrice">@product.Name (@product.BasePrice.ToString("C"))</option>
+                                        <option value="@product.Id" data-price="@product.BasePrice">@product.Name (@product.BasePrice.ToString("C"))</option>
                             }
                         </select>
                     </div>

@@ -4,7 +4,7 @@ using FluentValidation;
 namespace Application.Validators
 {
 
-    public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
+    public sealed class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
     {
         public UpdateCustomerCommandValidator()
         {

@@ -1,7 +1,7 @@
 ﻿// Application/ProductVendorDto.cs (new DTO)
 namespace Application
 {
-    public class ProductVendorDto
+    public sealed class ProductVendorDto
     {
         public Guid ProductId { get; set; }
         public Guid VendorId { get; set; }

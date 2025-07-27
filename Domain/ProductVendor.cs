@@ -1,7 +1,7 @@
 ﻿// Domain/ProductVendor.cs (new junction entity)
 namespace Domain
 {
-    public class ProductVendor
+    public sealed class ProductVendor
     {
         public Guid ProductId { get; set; }
         public Guid VendorId { get; set; }

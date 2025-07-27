@@ -8,9 +8,12 @@
 @Html.AntiForgeryToken()
 
 <div class="container py-4">
-    <div class="card shadow-sm border-0">
+    <div class="card shadow-lg border-0 rounded-3">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h1 class="mb-0"><i class="fas fa-box me-2"></i>Product Directory</h1>
+            <div class="d-flex align-items-center">
+                <i class="fas fa-box me-2 fs-4"></i>
+                <h2 class="mb-0">Product Directory</h2>
+            </div>
             <a asp-page="Create" class="btn btn-light btn-sm"><i class="fas fa-plus me-1"></i>Create New</a>
         </div>
         <div class="card-body p-4">
@@ -25,6 +28,9 @@
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Base Price</th>
+                        <th scope="col">Retail Price</th>
+                        <th scope="col">Weight</th>
+                        <th scope="col">Dimensions (L x W x H)</th>
                         <th scope="col">Actions</th>
                     </tr>
                 </thead>
@@ -37,6 +43,9 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            var weightUnits = ['kg', 'lbs'];
+            var dimensionUnits = ['cm', 'inches'];
+
             var table = $('#productsTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -60,7 +69,24 @@
                 },
                 columns: [
                     { data: 'name', name: 'Name', orderable: true, searchable: true },
-                    { data: 'basePrice', name: 'BasePrice', orderable: true, searchable: false },
+                    { data: 'basePrice', name: 'BasePrice', orderable: true, searchable: false, render: $.fn.dataTable.render.number(',', '.', 2, '$') },
+                    { data: 'retailPrice', name: 'RetailPrice', orderable: true, searchable: false, render: $.fn.dataTable.render.number(',', '.', 2, '$') },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return row.weight.toFixed(2) + ' ' + weightUnits[row.weightUnit];
+                        }
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return row.length.toFixed(1) + ' x ' + row.width.toFixed(1) + ' x ' + row.height.toFixed(1) + ' ' + dimensionUnits[row.dimensionUnit];
+                        }
+                    },
                     {
                         data: null,
                         orderable: false,
@@ -68,11 +94,11 @@
                         render: function (data, type, row) {
                             return `
                                 <div class="btn-group" role="group" aria-label="Actions for ${row.name}">
-                                    <a href="/Products/Edit/${row.id}" class="btn btn-sm btn-outline-primary me-1" title="Edit" aria-label="Edit">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
                                     <a href="/Products/Details/${row.id}" class="btn btn-sm btn-outline-info me-1" title="Details" aria-label="Details">
                                         <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="/Products/Edit/${row.id}" class="btn btn-sm btn-outline-primary me-1" title="Edit" aria-label="Edit">
+                                        <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="/Products/Delete/${row.id}" class="btn btn-sm btn-outline-danger" title="Delete" aria-label="Delete">
                                         <i class="fas fa-trash"></i>

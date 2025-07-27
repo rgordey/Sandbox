@@ -16,7 +16,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace Presentation.Web.Areas.Identity.Pages.Account
 {
-    public class ForgotPasswordModel : PageModel
+    public sealed class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _emailSender;

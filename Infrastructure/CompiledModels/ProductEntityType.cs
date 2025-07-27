@@ -19,7 +19,7 @@ namespace Infrastructure.CompiledModels
                 "Domain.Product",
                 typeof(Product),
                 baseEntityType,
-                propertyCount: 3,
+                propertyCount: 9,
                 navigationCount: 1,
                 unnamedIndexCount: 1,
                 keyCount: 1);
@@ -44,6 +44,30 @@ namespace Infrastructure.CompiledModels
                 sentinel: 0m);
             basePrice.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
+            var dimensionUnit = runtimeEntityType.AddProperty(
+                "DimensionUnit",
+                typeof(DimensionUnit),
+                propertyInfo: typeof(Product).GetProperty("DimensionUnit", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Product).GetField("<DimensionUnit>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            dimensionUnit.SetSentinelFromProviderValue(0);
+            dimensionUnit.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var height = runtimeEntityType.AddProperty(
+                "Height",
+                typeof(decimal),
+                propertyInfo: typeof(Product).GetProperty("Height", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Product).GetField("<Height>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                sentinel: 0m);
+            height.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var length = runtimeEntityType.AddProperty(
+                "Length",
+                typeof(decimal),
+                propertyInfo: typeof(Product).GetProperty("Length", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Product).GetField("<Length>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                sentinel: 0m);
+            length.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
             var name = runtimeEntityType.AddProperty(
                 "Name",
                 typeof(string),
@@ -51,6 +75,30 @@ namespace Infrastructure.CompiledModels
                 fieldInfo: typeof(Product).GetField("<Name>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 maxLength: 100);
             name.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var weight = runtimeEntityType.AddProperty(
+                "Weight",
+                typeof(decimal),
+                propertyInfo: typeof(Product).GetProperty("Weight", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Product).GetField("<Weight>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                sentinel: 0m);
+            weight.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var weightUnit = runtimeEntityType.AddProperty(
+                "WeightUnit",
+                typeof(WeightUnit),
+                propertyInfo: typeof(Product).GetProperty("WeightUnit", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Product).GetField("<WeightUnit>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly));
+            weightUnit.SetSentinelFromProviderValue(0);
+            weightUnit.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var width = runtimeEntityType.AddProperty(
+                "Width",
+                typeof(decimal),
+                propertyInfo: typeof(Product).GetProperty("Width", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Product).GetField("<Width>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                sentinel: 0m);
+            width.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var key = runtimeEntityType.AddKey(
                 new[] { id });

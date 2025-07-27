@@ -11,6 +11,12 @@ namespace Application.Features.Products.Commands
         Guid Id,
         string Name,
         decimal BasePrice,
+        decimal Weight,
+        WeightUnit WeightUnit,
+        decimal Length,
+        decimal Width,
+        decimal Height,
+        DimensionUnit DimensionUnit,
         List<ProductVendorDto> Vendors
     ) : ICommand<Unit>;
 

@@ -23,7 +23,7 @@ namespace Infrastructure.CompiledModels
                 discriminatorProperty: "CustomerType",
                 discriminatorValue: "Customer",
                 derivedTypesCount: 3,
-                propertyCount: 6,
+                propertyCount: 8,
                 navigationCount: 3,
                 unnamedIndexCount: 1,
                 keyCount: 1);
@@ -45,6 +45,20 @@ namespace Infrastructure.CompiledModels
                 fieldInfo: typeof(Customer).GetField("<CreatedAt>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 sentinel: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
             createdAt.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var customerNumber = runtimeEntityType.AddProperty(
+                "CustomerNumber",
+                typeof(string),
+                propertyInfo: typeof(Customer).GetProperty("CustomerNumber", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Customer).GetField("<CustomerNumber>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                nullable: true,
+                valueGenerated: ValueGenerated.OnAddOrUpdate,
+                beforeSaveBehavior: PropertySaveBehavior.Ignore,
+                afterSaveBehavior: PropertySaveBehavior.Ignore,
+                maxLength: 8);
+            customerNumber.AddAnnotation("Relational:ComputedColumnSql", "CONCAT('CUS', RIGHT('00000' + CAST([SequentialNumber] AS VARCHAR(5)), 5))");
+            customerNumber.AddAnnotation("Relational:IsStored", true);
+            customerNumber.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var customerType = runtimeEntityType.AddProperty(
                 "CustomerType",
@@ -77,6 +91,16 @@ namespace Infrastructure.CompiledModels
                 fieldInfo: typeof(Customer).GetField("<PhoneNumber>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 maxLength: 50);
             phoneNumber.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var sequentialNumber = runtimeEntityType.AddProperty(
+                "SequentialNumber",
+                typeof(int),
+                propertyInfo: typeof(Customer).GetProperty("SequentialNumber", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(Customer).GetField("<SequentialNumber>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                valueGenerated: ValueGenerated.OnAdd,
+                sentinel: 0);
+            sequentialNumber.AddAnnotation("Relational:DefaultValueSql", "NEXT VALUE FOR CustomerNumberSequence");
+            sequentialNumber.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var key = runtimeEntityType.AddKey(
                 new[] { id });

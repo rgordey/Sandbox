@@ -2,7 +2,7 @@
 
 namespace Application.Validators
 {
-    public class AddressDtoValidator : AbstractValidator<AddressDto?>
+    public sealed class AddressDtoValidator : AbstractValidator<AddressDto?>
     {
         public AddressDtoValidator()
         {

@@ -28,14 +28,16 @@ namespace Application.Features.Orders.Queries
 
             var totalRecords = await query.CountAsync(cancellationToken);
 
-            // Global search: Trim, lowercase, match on OrderDate, TotalAmount, or Customer Name/Email
+            // Global search: Trim, lowercase, match on OrderNumber, OrderDate, TotalAmount, Status, or Customer Name/Email
             if (!string.IsNullOrWhiteSpace(request.SearchValue))
             {
                 var search = request.SearchValue.Trim().ToLower();
                 var collation = "SQL_Latin1_General_CP1_CI_AS";
                 query = query.Where(o =>
+                    EF.Functions.Collate(o.OrderNumber.Trim().ToLower(), collation).Contains(search) ||
                     o.OrderDate.ToString("yyyy-MM-dd").ToLower().Contains(search) ||
                     o.TotalAmount.ToString().ToLower().Contains(search) ||
+                    o.Status.ToString().ToLower().Contains(search) ||
                     (o.Customer != null &&
                      (EF.Functions.Collate(o.Customer.Name.Trim().ToLower(), collation).Contains(search) ||
                       EF.Functions.Collate(o.Customer.Email.ToLower(), collation).Contains(search))));
@@ -49,8 +51,10 @@ namespace Application.Features.Orders.Queries
                 var isAsc = request.SortDirection.Equals("asc", StringComparison.OrdinalIgnoreCase);
                 query = request.SortColumn.ToLowerInvariant() switch
                 {
+                    "ordernumber" => isAsc ? query.OrderBy(o => o.OrderNumber) : query.OrderByDescending(o => o.OrderNumber),
                     "customerfullname" or "customer.name" => isAsc ? query.OrderBy(o => o.Customer.Name) : query.OrderByDescending(o => o.Customer.Name),
                     "orderdate" => isAsc ? query.OrderBy(o => o.OrderDate) : query.OrderByDescending(o => o.OrderDate),
+                    "status" => isAsc ? query.OrderBy(o => o.Status) : query.OrderByDescending(o => o.Status),
                     "totalamount" => isAsc ? query.OrderBy(o => o.TotalAmount) : query.OrderByDescending(o => o.TotalAmount),
                     _ => query.OrderBy(o => o.OrderDate)  // Default sort by OrderDate asc
                 };

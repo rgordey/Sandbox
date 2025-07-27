@@ -6,40 +6,39 @@
 }
 
 <div class="container py-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h1 class="mb-0"><i class="fas fa-eye me-2"></i>Product Details</h1>
-            <div>
-                <a asp-page="Edit" asp-route-id="@Model.Product?.Id" class="btn btn-outline-primary btn-sm me-2"><i class="fas fa-edit me-1"></i>Edit</a>
-                <a asp-page="Index" class="btn btn-outline-secondary btn-sm"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
-            </div>
+    <div class="card shadow-lg border-0 rounded-3">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <i class="fas fa-info-circle me-2 fs-4"></i>
+            <h2 class="mb-0">Product Details</h2>
         </div>
         <div class="card-body p-4">
-            @if (Model.Product == null)
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold"><i class="fas fa-tag me-1"></i>Name</dt>
+                <dd class="col-sm-9">@Model.Product.Name</dd>
+                <dt class="col-sm-3 fw-bold"><i class="fas fa-dollar-sign me-1"></i>Base Price</dt>
+                <dd class="col-sm-9">@Model.Product.BasePrice.ToString("C")</dd>
+                <dt class="col-sm-3 fw-bold"><i class="fas fa-dollar-sign me-1"></i>Retail Price</dt>
+                <dd class="col-sm-9">@Model.Product.RetailPrice.ToString("C")</dd>
+                <dt class="col-sm-3 fw-bold"><i class="fas fa-weight-hanging me-1"></i>Weight</dt>
+                <dd class="col-sm-9">@Model.Product.Weight @Model.Product.WeightUnit</dd>
+                <dt class="col-sm-3 fw-bold"><i class="fas fa-arrows-alt-h me-1"></i>Length</dt>
+                <dd class="col-sm-9">@Model.Product.Length @Model.Product.DimensionUnit</dd>
+                <dt class="col-sm-3 fw-bold"><i class="fas fa-arrows-alt-h me-1"></i>Width</dt>
+                <dd class="col-sm-9">@Model.Product.Width @Model.Product.DimensionUnit</dd>
+                <dt class="col-sm-3 fw-bold"><i class="fas fa-arrows-alt-v me-1"></i>Height</dt>
+                <dd class="col-sm-9">@Model.Product.Height @Model.Product.DimensionUnit</dd>
+            </dl>
+            <h5 class="mb-3 fw-bold"><i class="fas fa-users me-1"></i>Vendors</h5>
+            @if (Model.Product.Vendors.Any())
             {
-                <div class="alert alert-warning" role="alert">
-                    Product not found.
-                </div>
-            }
-            else
-            {
-                <dl class="row">
-                    <dt class="col-sm-3">ID</dt>
-                    <dd class="col-sm-9">@Model.Product.Id</dd>
-
-                    <dt class="col-sm-3">Name</dt>
-                    <dd class="col-sm-9">@Model.Product.Name</dd>
-
-                    <dt class="col-sm-3">Base Price</dt>
-                    <dd class="col-sm-9">@Model.Product.BasePrice</dd>
-                </dl>
-                <h4 class="mb-3">Vendors</h4>
-                <table class="table table-striped">
-                    <thead>
+                <table class="table table-hover table-bordered">
+                    <thead class="table-light">
                         <tr>
-                            <th>Vendor Name</th>
-                            <th>Price</th>
-                            <th>Stock</th>
+                            <th>Name</th>
+                            <th>Contact Email</th>
+                            <th>Address</th>
+                            <th>Vendor Price</th>
+                            <th>Stock Quantity</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,13 +46,25 @@
                         {
                             <tr>
                                 <td>@vendor.Name</td>
-                                <td>@vendor.VendorPrice</td>
+                                <td>@vendor.ContactEmail</td>
+                                <td>@vendor.Address.Line1, @vendor.Address.City, @vendor.Address.State @vendor.Address.ZipCode</td>
+                                <td>@vendor.VendorPrice.ToString("C")</td>
                                 <td>@vendor.StockQuantity</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             }
+            else
+            {
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-info-circle me-1"></i>No vendors associated with this product.
+                </div>
+            }
+            <div class="d-flex justify-content-end mt-4">
+                <a asp-page="Edit" asp-route-id="@Model.Product.Id" class="btn btn-primary me-2"><i class="fas fa-edit me-1"></i>Edit</a>
+                <a asp-page="Index" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Back to List</a>
+            </div>
         </div>
     </div>
 </div>

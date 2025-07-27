@@ -1,6 +1,6 @@
 ﻿namespace Application.Common
 {
-    public class DataTableResponse<T>
+    public sealed class DataTableResponse<T>
     {
         public int Draw { get; set; }
         public int RecordsTotal { get; set; }

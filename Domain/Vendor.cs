@@ -1,7 +1,7 @@
 ﻿// Update Domain/Vendor.cs (many products)
 namespace Domain
 {
-    public class Vendor
+    public sealed class Vendor
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;

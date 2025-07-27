@@ -1,6 +1,6 @@
 ﻿namespace Application
 {
-    public class AddressDto
+    public sealed class AddressDto
     {
         public string Line1 { get; set; } = null!;
         public string? Line2 { get; set; }

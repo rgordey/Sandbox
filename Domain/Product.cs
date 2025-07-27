@@ -1,12 +1,18 @@
-﻿// Update Domain/Product.cs (many vendors)
-namespace Domain
+﻿namespace Domain
 {
-    public class Product
+    public sealed class Product
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = null!;
-        public decimal BasePrice { get; set; } // Optional base price if needed
+        public decimal BasePrice { get; set; }
 
-        public List<ProductVendor> ProductVendors { get; set; } = new(); // Many vendors
+        public decimal Weight { get; set; }
+        public WeightUnit WeightUnit { get; set; } = WeightUnit.Kg;
+        public decimal Length { get; set; }
+        public decimal Width { get; set; }
+        public decimal Height { get; set; }
+        public DimensionUnit DimensionUnit { get; set; } = DimensionUnit.Cm;
+
+        public List<ProductVendor> ProductVendors { get; set; } = new();
     }
 }

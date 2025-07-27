@@ -5,6 +5,8 @@
     ViewData["Title"] = "Edit";
 }
 
+
+
 <div class="container py-4">
     <div class="card shadow-sm border-0">
         <div class="card-header bg-primary text-white">
@@ -14,6 +16,7 @@
             <form method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
                 <input type="hidden" asp-for="Customer.Id" />
+                <input type="hidden" asp-for="Customer.SequentialNumber" />
 
                 <div class="form-group mb-3">
                     <label asp-for="Customer.CustomerType" class="control-label"><i class="fas fa-user-tag me-1"></i>Customer Type</label>
@@ -25,7 +28,18 @@
                     <span asp-validation-for="Customer.CustomerType" class="text-danger"></span>
                 </div>
 
+                <div id="customerNumberField" class="form-group mb-3" style="display: none;">
+                    <label asp-for="Customer.CustomerNumber" class="form-label">Customer #</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                        <input asp-for="Customer.CustomerNumber" class="form-control" readonly="readonly" />
+                    </div>
+                    <span asp-validation-for="Customer.CustomerNumber" class="text-danger"></span>
+                </div>
+
                 <!-- Name Field (for non-Residential) -->
+                
+
                 <div id="nameField" class="form-group mb-3" style="display: none;">
                     <label asp-for="Customer.FullName" class="form-label">Name</label>
                     <div class="input-group">
@@ -391,6 +405,7 @@
             document.getElementById('corporateFields').style.display = (type === 'Corporate') ? 'block' : 'none';
             document.getElementById('governmentFields').style.display = (type === 'Government') ? 'block' : 'none';
             document.getElementById('nameField').style.display = (type !== 'Residential') ? 'block' : 'none';
+            document.getElementById('customerNumberField').style.display = 'block';
         });
     </script>
 }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.Customers
 {
-    public class DeleteModel(ISender mediator) : PageModel
+    public sealed class DeleteModel(ISender mediator) : PageModel
     {
         public CustomerMetaDto Customer { get; set; } = default!;
 

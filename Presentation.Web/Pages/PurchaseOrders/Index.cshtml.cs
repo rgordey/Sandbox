@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.PurchaseOrders
 {
-    public class IndexModel(ISender mediator) : PageModel
+    public sealed class IndexModel(ISender mediator) : PageModel
     {
         public void OnGet()
         {

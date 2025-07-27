@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.SalesOrders
 {
-    public class EditModel(ISender mediator) : PageModel
+    public sealed class EditModel(ISender mediator) : PageModel
     {
         [BindProperty]
         public UpdateOrderCommand Order { get; set; } = new();
@@ -35,6 +35,9 @@ namespace Presentation.Web.Pages.SalesOrders
                 OrderId = fetchedOrder.Id,
                 OrderDate = fetchedOrder.OrderDate,
                 TotalAmount = fetchedOrder.TotalAmount,
+                SequentialNumber = fetchedOrder.SequentialNumber,
+                OrderNumber = fetchedOrder.OrderNumber,
+                Status = fetchedOrder.Status,  // Map status to show and edit
                 OrderDetails = fetchedOrder.OrderDetails.Any() ? fetchedOrder.OrderDetails.ToList() : new List<SalesOrderDetailDto>()
             };
 

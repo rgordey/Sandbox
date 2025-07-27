@@ -21,7 +21,7 @@ namespace Infrastructure.CompiledModels
                 "Domain.SalesOrder",
                 typeof(SalesOrder),
                 baseEntityType,
-                propertyCount: 4,
+                propertyCount: 7,
                 navigationCount: 2,
                 foreignKeyCount: 1,
                 unnamedIndexCount: 1,
@@ -52,6 +52,39 @@ namespace Infrastructure.CompiledModels
                 fieldInfo: typeof(SalesOrder).GetField("<OrderDate>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
                 sentinel: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
             orderDate.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var orderNumber = runtimeEntityType.AddProperty(
+                "OrderNumber",
+                typeof(string),
+                propertyInfo: typeof(SalesOrder).GetProperty("OrderNumber", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(SalesOrder).GetField("<OrderNumber>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                nullable: true,
+                valueGenerated: ValueGenerated.OnAddOrUpdate,
+                beforeSaveBehavior: PropertySaveBehavior.Ignore,
+                afterSaveBehavior: PropertySaveBehavior.Ignore,
+                maxLength: 8);
+            orderNumber.AddAnnotation("Relational:ComputedColumnSql", "CONCAT('SO', RIGHT('000000' + CAST([SequentialNumber] AS VARCHAR(6)), 6))");
+            orderNumber.AddAnnotation("Relational:IsStored", true);
+            orderNumber.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var sequentialNumber = runtimeEntityType.AddProperty(
+                "SequentialNumber",
+                typeof(int),
+                propertyInfo: typeof(SalesOrder).GetProperty("SequentialNumber", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(SalesOrder).GetField("<SequentialNumber>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                valueGenerated: ValueGenerated.OnAdd,
+                sentinel: 0);
+            sequentialNumber.AddAnnotation("Relational:DefaultValueSql", "NEXT VALUE FOR SalesOrderNumberSequence");
+            sequentialNumber.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
+
+            var status = runtimeEntityType.AddProperty(
+                "Status",
+                typeof(SalesOrderStatus),
+                propertyInfo: typeof(SalesOrder).GetProperty("Status", BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                fieldInfo: typeof(SalesOrder).GetField("<Status>k__BackingField", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly),
+                providerPropertyType: typeof(string));
+            status.SetSentinelFromProviderValue("Placed");
+            status.AddAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.None);
 
             var totalAmount = runtimeEntityType.AddProperty(
                 "TotalAmount",

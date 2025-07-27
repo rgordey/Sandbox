@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.WebUtilities;
 
 namespace Presentation.Web.Areas.Identity.Pages.Account
 {
-    public class ConfirmEmailModel : PageModel
+    public sealed class ConfirmEmailModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
 

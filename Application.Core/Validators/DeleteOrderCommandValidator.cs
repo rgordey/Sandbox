@@ -4,7 +4,7 @@ using FluentValidation;
 
 namespace Application.Validators
 {
-    public class DeleteOrderCommandValidator : AbstractValidator<DeleteOrderCommand>
+    public sealed class DeleteOrderCommandValidator : AbstractValidator<DeleteOrderCommand>
     {
         public DeleteOrderCommandValidator()
         {

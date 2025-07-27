@@ -4,7 +4,7 @@ using Domain;
 
 namespace Application.Mappings
 {
-    public class ProductProfile : Profile
+    public sealed class ProductProfile : Profile
     {
         public ProductProfile()
         {
@@ -30,7 +30,8 @@ namespace Application.Mappings
                     },
                     VendorPrice = pv.VendorPrice,
                     StockQuantity = pv.StockQuantity
-                })));
+                })))
+                .ForMember(dest => dest.RetailPrice, opt => opt.MapFrom(src => src.ProductVendors.Any() ? src.ProductVendors.Min(pv => pv.VendorPrice) * 2m : src.BasePrice));  // New: Standard 100% markup on min cost to get retail price
 
             CreateMap<ProductVendor, ProductVendorDto>()
                 .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.ProductId))

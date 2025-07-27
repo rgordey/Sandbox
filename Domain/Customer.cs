@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
@@ -9,7 +10,9 @@ namespace Domain
         [Required]
         [StringLength(100)]
         public string Name { get; set; } = null!;
-        public string Email { get; set; } = null!;
+        public string Email { get; set; } = null!;        
+        public int SequentialNumber { get; set; }
+        public string? CustomerNumber { get; set; }
         public string PhoneNumber { get; set; } = null!;
         public Address? MailingAddress { get; set; }
         public Address? ShippingAddress { get; set; }

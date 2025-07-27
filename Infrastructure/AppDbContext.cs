@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>, IAppDbContext
+    public sealed class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>, IAppDbContext
     {
         public DbSet<Customer> Customers { get; set; }
         public DbSet<SalesOrder> Orders { get; set; }
@@ -47,6 +47,26 @@ namespace Infrastructure
                 .HasValue<ResidentialCustomer>("Residential")
                 .HasValue<CorporateCustomer>("Corporate")
                 .HasValue<GovernmentCustomer>("Government");
+
+            modelBuilder.HasSequence<int>("CustomerNumberSequence")
+                .StartsAt(1)
+                .IncrementsBy(1);
+
+            modelBuilder.HasSequence<int>("ProductNumberSequence")
+                .StartsAt(1)
+                .IncrementsBy(1);
+
+            modelBuilder.HasSequence<int>("VendorNumberSequence")
+                .StartsAt(1)
+                .IncrementsBy(1);
+
+            modelBuilder.HasSequence<int>("SalesOrderNumberSequence")
+                .StartsAt(1)
+                .IncrementsBy(1);
+
+            modelBuilder.HasSequence<int>("PurchaseOrderNumberSequence")
+                .StartsAt(1)
+                .IncrementsBy(1);
         }
     }    
 }

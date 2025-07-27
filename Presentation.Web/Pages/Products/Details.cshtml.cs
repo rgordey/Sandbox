@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Presentation.Web.Pages.Products
 {
-    public class DetailsModel(ISender sender) : PageModel
+    public sealed class DetailsModel(ISender sender) : PageModel
     {
         private readonly ISender _sender = sender;
 
-        public ProductDto? Product { get; set; }
+        public ProductDto Product { get; set; } = null!;
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -19,6 +19,7 @@ namespace Presentation.Web.Pages.Products
             {
                 return NotFound();
             }
+
             return Page();
         }
     }
